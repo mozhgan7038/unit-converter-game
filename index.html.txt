@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ماجراجویی فضایی - بازی تبدیل واحدها</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a2e 0%, #1a1a4e 30%, #0d0d3d 60%, #0a0a2e 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        /* ذرات ستاره */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 2s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        @keyframes shootingStar {
+            0% {
+                transform: translateX(0) translateY(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(-500px) translateY(500px);
+                opacity: 0;
+            }
+        }
+
+        .shooting-star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            animation: shootingStar 1s linear infinite;
+        }
+
+        .game-container {
+            position: relative;
+            z-index: 1;
+            width: 90%;
+            max-width: 700px;
+            background: rgba(13, 17, 45, 0.85);
+            border: 3px solid #00d4ff;
+            border-radius: 25px;
+            box-shadow: 
+                0 0 30px rgba(0, 212, 255, 0.4),
+                0 0 60px rgba(0, 100, 255, 0.2),
+                inset 0 0 30px rgba(0, 212, 255, 0.05);
+            padding: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .score-section {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .score-box {
+            background: linear-gradient(135deg, #1a237e, #0d47a1);
+            border: 2px solid #00d4ff;
+            border-radius: 15px;
+            padding: 12px 20px;
+            color: white;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.3);
+        }
+
+        .score-label {
+            font-size: 12px;
+            color: #80deea;
+            margin-bottom: 5px;
+        }
+
+        .score-value {
+            font-size: 28px;
+            font-weight: bold;
+            color: #00e5ff;
+            text-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+        }
+
+        .timer-box {
+            background: linear-gradient(135deg, #b71c1c, #d32f2f);
+            border: 2px solid #ff5252;
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            box-shadow: 0 0 20px rgba(255, 82, 82, 0.4);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .timer-value {
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        .timer-label {
+            font-size: 10px;
+            color: #ffcdd2;
+        }
+
+        .level-indicator {
+            background: linear-gradient(135deg, #1b5e20, #2e7d32);
+            border: 2px solid #69f0ae;
+            border-radius: 15px;
+            padding: 10px 20px;
+            color: #69f0ae;
+            font-weight: bold;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(105, 240, 174, 0.3);
+        }
+
+        .rocket-animation {
+            text-align: center;
+            font-size: 60px;
+            margin: 10px 0;
+            animation: float 2s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .question-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 25px;
+            margin: 20px 0;
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            text-align: center;
+        }
+
+        .unit-type {
+            color: #80deea;
+            font-size: 14px;
+            margin-bottom: 10px;
+            display: inline-block;
+            background: rgba(0, 212, 255, 0.15);
+            padding: 5px 15px;
+            border-radius: 20px;
+        }
+
+        .question-text {
+            color: white;
+            font-size: 26px;
+            font-weight: bold;
+            margin: 15px 0;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        .target-unit {
+            color: #00e5ff;
+            font-size: 20px;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .option-btn {
+            background: linear-gradient(135deg, #1a237e, #283593);
+            border: 2px solid #3f51b5;
+            color: white;
+            padding: 18px;
+            border-radius: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .option-btn:hover {
+            border-color: #00d4ff;
+            box-shadow: 0 8px 25px rgba(0, 212, 255, 0.4);
+            transform: translateY(-3px);
+            background: linear-gradient(135deg, #283593, #1a237e);
+        }
+
+        .option-btn:active {
+            transform: scale(0.95);
+        }
+
+        .option-btn.correct {
+            background: linear-gradient(135deg, #2e7d32, #4caf50) !important;
+            border-color: #69f0ae !important;
+            animation: correctAnim 0.5s ease;
+        }
+
+        .option-btn.wrong {
+            background: linear-gradient(135deg, #c62828, #f44336) !important;
+            border-color: #ff5252 !important;
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes correctAnim {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .feedback {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            min-height: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .feedback.correct {
+            color: #69f0ae;
+        }
+
+        .feedback.wrong {
+            color: #ff5252;
+        }
+
+        .combo-text {
+            color: #ffd740;
+            font-size: 20px;
+            animation: comboAnim 0.5s ease;
+        }
+
+        @keyframes comboAnim {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #ff6f00, #ff8f00);
+            border: none;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(255, 111, 0, 0.4);
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 111, 0, 0.6);
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .game-over {
+            text-align: center;
+            color: white;
+            padding: 30px;
+        }
+
+        .game-over h2 {
+            font-size: 36px;
+            color: #ffd740;
+            margin-bottom: 20px;
+        }
+
+        .final-stats {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 10px;
+        }
+
+        .stat-value {
+            font-size: 30px;
+            font-weight: bold;
+            color: #00e5ff;
+        }
+
+        .stat-label {
+            color: #80deea;
+            font-size: 14px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00d4ff, #69f0ae);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+        }
+
+        @media (max-width: 600px) {
+            .game-container {
+                padding: 15px;
+                width: 95%;
+            }
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+            .question-text {
+                font-size: 20px;
+            }
+            .score-box {
+                padding: 8px 15px;
+            }
+            .score-value {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- پس‌زمینه ستاره‌ها -->
+    <div class="stars" id="starsContainer"></div>
+
+    <!-- کانتینر بازی -->
+    <div class="game-container" id="gameContainer">
+        <!-- هدر بازی -->
+        <div class="header">
+            <div class="score-section">
+                <div class="score-box">
+                    <div class="score-label">🚀 امتیاز</div>
+                    <div class="score-value" id="score">0</div>
+                </div>
+                <div class="score-box">
+                    <div class="score-label">🔥 بیشترین امتیاز</div>
+                    <div class="score-value" id="highScore">0</div>
+                </div>
+            </div>
+            <div class="timer-box" id="timerBox">
+                <div class="timer-value" id="timer">60</div>
+                <div class="timer-label">ثانیه</div>
+            </div>
+        </div>
+
+        <div class="level-indicator" id="levelIndicator">
+            🌍 مرحله ۱ - آسان
+        </div>
+
+        <!-- انیمیشن موشک -->
+        <div class="rocket-animation" id="rocketEmoji">🚀</div>
+
+        <!-- بخش سوال -->
+        <div class="question-section" id="questionSection">
+            <div class="unit-type" id="unitType">📏 تبدیل طول</div>
+            <div class="question-text" id="questionText">منتظر سوال باشید...</div>
+            <div class="target-unit" id="targetUnit"></div>
+            
+            <!-- نوار پیشرفت -->
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+
+            <!-- گزینه‌ها -->
+            <div class="options-grid" id="optionsGrid"></div>
+
+            <!-- بازخورد -->
+            <div class="feedback" id="feedback"></div>
+        </div>
+
+        <!-- دکمه شروع -->
+        <button class="btn" id="startBtn" onclick="startGame()">
+            🚀 شروع ماجراجویی فضایی
+        </button>
+    </div>
+
+    <script>
+        // ============ عناصر DOM ============
+        const scoreEl = document.getElementById('score');
+        const highScoreEl = document.getElementById('highScore');
+        const timerEl = document.getElementById('timer');
+        const levelIndicator = document.getElementById('levelIndicator');
+        const questionText = document.getElementById('questionText');
+        const targetUnit = document.getElementById('targetUnit');
+        const unitType = document.getElementById('unitType');
+        const optionsGrid = document.getElementById('optionsGrid');
+        const feedback = document.getElementById('feedback');
+        const startBtn = document.getElementById('startBtn');
+        const timerBox = document.getElementById('timerBox');
+        const rocketEmoji = document.getElementById('rocketEmoji');
+        const progressFill = document.getElementById('progressFill');
+
+        // ============ متغیرهای بازی ============
+        let score = 0;
+        let highScore = parseInt(localStorage.getItem('unitConverterHighScore')) || 0;
+        let timeLeft = 60;
+        let timerInterval;
+        let currentQuestion;
+        let combo = 0;
+        let totalQuestions = 0;
+        let correctAnswers = 0;
+        let gameActive = false;
+        let level = 1;
+        let questionsInLevel = 0;
+
+        // ============ داده‌های تبدیل واحد ============
+        const unitCategories = {
+            length: {
+                name: '📏 تبدیل طول',
+                units: [
+                    { name: 'میلی‌متر', short: 'mm', factor: 0.001 },
+                    { name: 'سانتی‌متر', short: 'cm', factor: 0.01 },
+                    { name: 'دسی‌متر', short: 'dm', factor: 0.1 },
+                    { name: 'متر', short: 'm', factor: 1 },
+                    { name: 'دکامتر', short: 'dam', factor: 10 },
+                    { name: 'هکتومتر', short: 'hm', factor: 100 },
+                    { name: 'کیلومتر', short: 'km', factor: 1000 }
+                ]
+            },
+            mass: {
+                name: '⚖️ تبدیل جرم',
+                units: [
+                    { name: 'میلی‌گرم', short: 'mg', factor: 0.001 },
+                    { name: 'سانتی‌گرم', short: 'cg', factor: 0.01 },
+                    { name: 'دسی‌گرم', short: 'dg', factor: 0.1 },
+                    { name: 'گرم', short: 'g', factor: 1 },
+                    { name: 'دکاگرم', short: 'dag', factor: 10 },
+                    { name: 'هکتوگرم', short: 'hg', factor: 100 },
+                    { name: 'کیلوگرم', short: 'kg', factor: 1000 },
+                    { name: 'تن', short: 't', factor: 1000000 }
+                ]
+            },
+            volume: {
+                name: '🧪 تبدیل حجم',
+                units: [
+                    { name: 'میلی‌لیتر', short: 'mL', factor: 0.001 },
+                    { name: 'سانتی‌لیتر', short: 'cL', factor: 0.01 },
+                    { name: 'دسی‌لیتر', short: 'dL', factor: 0.1 },
+                    { name: 'لیتر', short: 'L', factor: 1 },
+                    { name: 'دکالیتر', short: 'daL', factor: 10 },
+                    { name: 'هکتولیتر', short: 'hL', factor: 100 },
+                    { name: 'متر مکعب', short: 'm³', factor: 1000 }
+                ]
+            },
+            time: {
+                name: '⏰ تبدیل زمان',
+                units: [
+                    { name: 'ثانیه', short: 's', factor: 1 },
+                    { name: 'دقیقه', short: 'min', factor: 60 },
+                    { name: 'ساعت', short: 'h', factor: 3600 },
+                    { name: 'روز', short: 'd', factor: 86400 },
+                    { name: 'هفته', short: 'wk', factor: 604800 }
+                ]
+            }
+        };
+
+        // ============ توابع کمکی ============
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function getRandomFloat(min, max, decimals = 2) {
+            const num = Math.random() * (max - min) + min;
+            return parseFloat(num.toFixed(decimals));
+        }
+
+        function shuffleArray(array) {
+            const newArray = [...array];
+            for (let i = newArray.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+            }
+            return newArray;
+        }
+
+        function formatNumber(num) {
+            if (Number.isInteger(num)) return num.toString();
+            return num.toFixed(3).replace(/\.?0+$/, '');
+        }
+
+        // ============ ایجاد سوال ============
+        function generateQuestion() {
+            // انتخاب دسته تصادفی
+            const categories = Object.keys(unitCategories);
+            const categoryKey = categories[Math.floor(Math.random() * categories.length)];
+            const category = unitCategories[categoryKey];
+            
+            // انتخاب دو واحد متفاوت بر اساس سطح
+            let fromIndex, toIndex;
+            const maxUnitIndex = Math.min(level + 2, category.units.length - 1);
+            
+            do {
+                fromIndex = getRandomInt(0, maxUnitIndex);
+                toIndex = getRandomInt(0, maxUnitIndex);
+            } while (fromIndex === toIndex);
+
+            const fromUnit = category.units[fromIndex];
+            const toUnit = category.units[toIndex];
+
+            // تولید مقدار تصادفی بر اساس سطح
+            let value;
+            if (level <= 2) {
+                value = getRandomInt(1, 100);
+            } else if (level <= 4) {
+                value = getRandomFloat(0.1, 500, getRandomInt(1, 2));
+            } else {
+                value = getRandomFloat(0.001, 1000, getRandomInt(1, 3));
+            }
+
+            // محاسبه پاسخ صحیح
+            const baseValue = value * fromUnit.factor;
+            const correctAnswer = baseValue / toUnit.factor;
+
+            // تولید گزینه‌های اشتباه
+            const wrongAnswers = new Set();
+            const correctFormatted = formatNumber(parseFloat(correctAnswer.toFixed(3)));
+
+            while (wrongAnswers.size < 3) {
+                let wrongAnswer;
+                const variation = correctAnswer * (0.1 + Math.random() * 0.9);
+                
+                if (Math.random() > 0.5) {
+                    wrongAnswer = correctAnswer * (1 + (Math.random() * 0.5 + 0.1));
+                } else {
+                    wrongAnswer = correctAnswer * (1 - (Math.random() * 0.5 + 0.1));
+                }
+                
+                // اطمینان از اینکه اشتباه است
+                if (Math.abs(wrongAnswer - correctAnswer) > correctAnswer * 0.01 && wrongAnswer > 0) {
+                    wrongAnswers.add(formatNumber(parseFloat(wrongAnswer.toFixed(3))));
+                }
+            }
+
+            // ترکیب و مخلوط کردن گزینه‌ها
+            const allOptions = shuffleArray([correctFormatted, ...Array.from(wrongAnswers)]);
+
+            return {
+                categoryKey,
+                category,
+                fromUnit,
+                toUnit,
+                value,
+                correctAnswer: correctFormatted,
+                options: allOptions,
+                questionStr: `${formatNumber(value)} ${fromUnit.name} معادل چند ${toUnit.name} است؟`
+            };
+        }
+
+        // ============ نمایش سوال ============
+        function displayQuestion() {
+            if (!gameActive) return;
+
+            currentQuestion = generateQuestion();
+            
+            unitType.textContent = currentQuestion.category.name;
+            questionText.textContent = currentQuestion.questionStr;
+            targetUnit.textContent = '';
+            feedback.textContent = '';
+            feedback.className = 'feedback';
+            
+            optionsGrid.innerHTML = '';
+            
+            currentQuestion.options.forEach((option, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.textContent = option;
+                btn.onclick = () => checkAnswer(option, btn);
+                optionsGrid.appendChild(btn);
+            });
+
+            // به‌روزرسانی نوار پیشرفت
+            const progress = (questionsInLevel % 5) * 20;
+            progressFill.style.width = progress + '%';
+        }
+
+        // ============ بررسی پاسخ ============
+        function checkAnswer(selected, btnElement) {
+            if (!gameActive) return;
+
+            totalQuestions++;
+            const allButtons = optionsGrid.querySelectorAll('.option-btn');
+            
+            // غیرفعال کردن همه دکمه‌ها
+            allButtons.forEach(btn => btn.style.pointerEvents = 'none');
+
+            if (selected === currentQuestion.correctAnswer) {
+                // پاسخ صحیح
+                btnElement.classList.add('correct');
+                correctAnswers++;
+                combo++;
+                
+                // محاسبه امتیاز
+                const basePoints = 10;
+                const comboBonus = Math.min(combo - 1, 5) * 2;
+                const timeBonus = Math.floor(timeLeft / 10);
+                const points = basePoints + comboBonus + timeBonus;
+                
+                score += points;
+                questionsInLevel++;
+                
+                feedback.textContent = `✅ عالی! +${points} امتیاز ${combo > 1 ? '🔥' : ''}`;
+                feedback.className = 'feedback correct';
+                
+                if (combo >= 3) {
+                    feedback.innerHTML += `<br><span class="combo-text">🔥 کامبو ×${combo}!</span>`;
+                }
+                
+                // افزایش زمان
+                timeLeft = Math.min(timeLeft + 2, 99);
+                
+                // تغییر شکل موشک بر اساس سطح
+                updateRocketEmoji();
+                
+                // افزایش سطح
+                if (questionsInLevel >= 5) {
+                    level = Math.min(level + 1, 7);
+                    questionsInLevel = 0;
+                    levelIndicator.textContent = `🌍 مرحله ${level} - ${getLevelName(level)}`;
+                    progressFill.style.width = '0%';
+                }
+                
+            } else {
+                // پاسخ اشتباه
+                btnElement.classList.add('wrong');
+                combo = 0;
+                
+                // نمایش پاسخ صحیح
+                allButtons.forEach(btn => {
+                    if (btn.textContent === currentQuestion.correctAnswer) {
+                        btn.classList.add('correct');
+                    }
+                });
+                
+                feedback.textContent = `❌ اشتباه! پاسخ صحیح: ${currentQuestion.correctAnswer}`;
+                feedback.className = 'feedback wrong';
+                
+                // کاهش زمان
+                timeLeft = Math.max(timeLeft - 5, 0);
+                
+                // لرزش موشک
+                rocketEmoji.style.animation = 'shake 0.5s ease';
+                setTimeout(() => {
+                    rocketEmoji.style.animation = 'float 2s ease-in-out infinite';
+                }, 500);
+            }
+
+            // به‌روزرسانی امتیاز
+            scoreEl.textContent = score;
+            if (score > highScore) {
+                highScore = score;
+                highScoreEl.textContent = highScore;
+                localStorage.setItem('unitConverterHighScore', highScore);
+            }
+
+            // سوال بعدی بعد از تاخیر کوتاه
+            setTimeout(() => {
+                if (gameActive) {
+                    displayQuestion();
+                }
+            }, 1500);
+        }
+
+        function getLevelName(level) {
+            const names = ['آسان', 'آسان', 'متوسط', 'متوسط', 'سخت', 'سخت', 'فضانورد حرفه‌ای'];
+            return names[Math.min(level - 1, 6)];
+        }
+
+        function updateRocketEmoji() {
+            const rockets = ['🚀', '🛸', '✈️', '🛩️', '🚁', '🛰️', '🌌'];
+            rocketEmoji.textContent = rockets[Math.min(level - 1, 6)];
+        }
+
+        // ============ تایمر ============
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timerEl.textContent = timeLeft;
+                
+                // تغییر رنگ تایمر
+                if (timeLeft <= 10) {
+                    timerBox.style.borderColor = '#ff1744';
+                    timerBox.style.boxShadow = '0 0 30px rgba(255, 23, 68, 0.6)';
+                    timerEl.style.animation = 'pulse 0.5s infinite';
+                } else if (timeLeft <= 20) {
+                    timerBox.style.borderColor = '#ff9100';
+                    timerBox.style.boxShadow = '0 0 20px rgba(255, 145, 0, 0.5)';
+                }
+                
+                if (timeLeft <= 0) {
+                    endGame();
+                }
+            }, 1000);
+        }
+
+        // ============ شروع بازی ============
+        function startGame() {
+            // ریست متغیرها
+            score = 0;
+            timeLeft = 60;
+            combo = 0;
+            totalQuestions = 0;
+            correctAnswers = 0;
+            level = 1;
+            questionsInLevel = 0;
+            gameActive = true;
+            
+            // ریست نمایش
+            scoreEl.textContent = '0';
+            highScoreEl.textContent = highScore;
+            timerEl.textContent = '60';
+            levelIndicator.textContent = '🌍 مرحله ۱ - آسان';
+            feedback.textContent = '';
+            feedback.className = 'feedback';
+            progressFill.style.width = '0%';
+            rocketEmoji.textContent = '🚀';
+            rocketEmoji.style.animation = 'float 2s ease-in-out infinite';
+            
+            // ریست استایل تایمر
+            timerBox.style.borderColor = '#ff5252';
+            timerBox.style.boxShadow = '0 0 20px rgba(255, 82, 82, 0.4)';
+            timerEl.style.animation = 'none';
+            
+            // مخفی کردن دکمه شروع
+            startBtn.style.display = 'none';
+            
+            // شروع تایمر و نمایش سوال
+            clearInterval(timerInterval);
+            startTimer();
+            displayQuestion();
+        }
+
+        // ============ پایان بازی ============
+        function endGame() {
+            gameActive = false;
+            clearInterval(timerInterval);
+            
+            // ذخیره بیشترین امتیاز
+            if (score > highScore) {
+                highScore = score;
+                localStorage.setItem('unitConverterHighScore', highScore);
+                highScoreEl.textContent = highScore;
+            }
+            
+            // نمایش صفحه پایان
+            const accuracy = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
+            
+            questionText.textContent = '🎮 بازی تمام شد!';
+            targetUnit.textContent = '';
+            unitType.textContent = '';
+            optionsGrid.innerHTML = '';
+            feedback.textContent = '';
+            progressFill.style.width = '100%';
+            
+            // نمایش آمار نهایی
+            const statsHtml = `
+                <div class="game-over">
+                    <h2>🚀 ماموریت پایان یافت!</h2>
+                    <div class="final-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">${score}</div>
+                            <div class="stat-label">امتیاز نهایی</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">${correctAnswers}/${totalQuestions}</div>
+                            <div class="stat-label">پاسخ‌های صحیح</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">${accuracy}%</div>
+                            <div class="stat-label">درصد accuracy</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">🏆 ${highScore}</div>
+                            <div class="stat-label">رکورد</div>
+                        </div>
+                    </div>
+                    <p style="color: #80deea; margin: 15px 0;">
+                        ${accuracy >= 80 ? '🌟 عالی بود! تو یه فضانورد حرفه‌ای هستی!' : 
+                          accuracy >= 50 ? '👍 خوب بود! با تمرین بیشتر می‌تونی بهتر بشی!' : 
+                          '💪 به تمرین ادامه بده! هر بار قوی‌تر می‌شی!'}
+                    </p>
+                </div>
+            `;
+            
+            optionsGrid.innerHTML = statsHtml;
+            
+            // نمایش دکمه شروع مجدد
+            startBtn.textContent = '🔄 ماجراجویی دوباره';
+            startBtn.style.display = 'block';
+            startBtn.onclick = startGame;
+            
+            rocketEmoji.textContent = '🏁';
+        }
+
+        // ============ ایجاد ستاره‌های پس‌زمینه ============
+        function createStars() {
+            const container = document.getElementById('starsContainer');
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.width = (Math.random() * 3 + 1) + 'px';
+                star.style.height = star.style.width;
+                star.style.animationDelay = Math.random() * 2 + 's';
+                container.appendChild(star);
+            }
+            
+            // ستاره‌های دنباله‌دار
+            setInterval(() => {
+                if (Math.random() < 0.3) {
+                    const shootingStar = document.createElement('div');
+                    shootingStar.className = 'shooting-star';
+                    shootingStar.style.left = Math.random() * 100 + '%';
+                    shootingStar.style.top = Math.random() * 50 + '%';
+                    container.appendChild(shootingStar);
+                    
+                    setTimeout(() => {
+                        shootingStar.remove();
+                    }, 1000);
+                }
+            }, 3000);
+        }
+
+        // ============ راه‌اندازی اولیه ============
+        function init() {
+            createStars();
+            highScoreEl.textContent = highScore;
+            
+            // نمایش صفحه شروع
+            questionText.textContent = '🌟 به ماجراجویی فضایی خوش آمدی!';
+            targetUnit.textContent = 'آماده‌ای برای چالش تبدیل واحدها؟';
+            unitType.textContent = '🚀 بازی تبدیل واحدهای ریاضی';
+            
+            const welcomeHtml = `
+                <div style="color: #80deea; text-align: center; padding: 20px;">
+                    <p>📏 تبدیل طول | ⚖️ تبدیل جرم | 🧪 تبدیل حجم | ⏰ تبدیل زمان</p>
+                    <p style="margin-top: 15px;">⏱️ ۶۰ ثانیه فرصت داری!</p>
+                    <p>✅ پاسخ صحیح = زمان بیشتر</p>
+                    <p>🔥 کامبو = امتیاز بیشتر</p>
+                </div>
+            `;
+            optionsGrid.innerHTML = welcomeHtml;
+            feedback.textContent = '';
+        }
+
+        // شروع برنامه
+        init();
+    </script>
+</body>
+</html>
