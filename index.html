@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=1.5">
-  <title>نبرد واحدها 3.8 | نسخه پایدار نهایی ⚔️</title>
+  <title>نبرد واحدها 3.7 | نسخه طلایی با فونت فارسی ⚔️</title>
   
-  <!-- فونت Vazirmatn -->
+  <!-- ✅ فونت Vazirmatn با وزن‌های کامل -->
   <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   
   <style>
@@ -44,7 +44,6 @@
       animation: floatUp var(--duration) infinite ease-in;
       animation-delay: var(--delay);
       opacity: 0;
-      will-change: transform, opacity;
     }
 
     @keyframes floatUp {
@@ -369,7 +368,7 @@
     }
     .powerup-label { font-size: 0.7rem; display: block; color: #ccb27c; font-weight: 500; }
 
-    /* Tutorial Modal */
+    /* استایل‌های Tutorial */
     .tutorial-modal .modal-content {
       background: linear-gradient(180deg, #2d3f2a 0%, #1a2616 100%);
       border: 3px solid #e7c568;
@@ -428,6 +427,16 @@
       font-family: 'Vazirmatn', sans-serif;
     }
     
+    .tutorial-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(76,175,80,0.4);
+    }
+    
+    .tutorial-btn:active {
+      border-bottom-width: 2px;
+      transform: translateY(3px);
+    }
+    
     .skip-tutorial {
       background: none;
       border: none;
@@ -439,7 +448,12 @@
       padding: 5px;
       font-weight: 500;
     }
+    
+    .skip-tutorial:hover {
+      color: #e7c568;
+    }
 
+    /* ✅ مدال‌های دریافتی در پایان بازی */
     .medals-summary {
       display: flex;
       flex-wrap: wrap;
@@ -473,15 +487,15 @@
     <div class="header">
       <div class="score-box">🏆 <span id="scoreDisplay">0</span></div>
       <div class="level-box">⭐ سطح <span id="levelDisplay">1</span></div>
-      <div class="round-box">🎯 <span id="roundDisplay">0</span></div>
+      <div class="round-box">🎯 <span id="roundDisplay">1</span></div>
       <div class="timer-box" id="timerBox">⏳ <span id="timerDisplay">90</span></div>
     </div>
 
     <div id="dynamicContent">
       <div id="startScreen" style="text-align:center; padding:20px;">
-        <h2 style="color:#e7c568; font-weight:900; font-size:2rem;">⚔️ نبرد واحدها 3.8 ⚔️</h2>
+        <h2 style="color:#e7c568; font-weight:900; font-size:2rem;">⚔️ نبرد واحدها 3.7 ⚔️</h2>
         <p style="margin:15px 0; font-weight:600;">📏 طول | 📐 مساحت | 🧊 حجم | 💧 مایعات | 🏋️ جرم</p>
-        <p style="color:#ccb27c; font-size:0.85rem; font-weight:500;">🔬 نسخه پایدار نهایی - تمام باگ‌ها رفع شده</p>
+        <p style="color:#ccb27c; font-size:0.85rem; font-weight:500;">🔬 نسخه طلایی با فونت فارسی - آماده برای آموزش</p>
         <div style="margin:10px 0;">
           <label style="font-weight:600;">⏱️ زمان: </label>
           <select id="timeSelect" style="padding:6px; border-radius:20px; background:#2d3a2c; color:#f0e6c5; font-family:'Vazirmatn',sans-serif;">
@@ -540,7 +554,7 @@
         <p style="font-weight:600;">🏆 امتیاز: <span id="finalScoreSpan">0</span></p>
         <p style="font-weight:600;">🔥 بهترین استریک: <span id="bestStreakSpan">0</span></p>
         <p style="font-weight:600;">⭐ سطح: <span id="finalLevelSpan">1</span></p>
-        <p style="font-weight:600;" id="medalsEarnedText">🏅 مدال‌های این دور:</p>
+        <p style="font-weight:600;">🏅 مدال‌های این دور:</p>
         <div class="medals-summary" id="medalsSummary"></div>
         <p style="color:#f5c542; font-weight:700;" id="newRecordText"></p>
         <button class="start-btn" id="playAgainEnd">🔄 دوباره</button>
@@ -602,7 +616,6 @@
     </div>
   </div>
 
-  <!-- مودال مدال -->
   <div class="modal" id="medalModal">
     <div class="modal-content">
       <h2 style="font-weight:900;">🏅 مدال جدید!</h2>
@@ -614,7 +627,7 @@
   <script>
     (function() {
       // ==================== CONSTANTS ====================
-      const STORAGE_VERSION = 38;
+      const STORAGE_VERSION = 37;
       const STORAGE_PREFIX = 'unitWar';
       const DATA_VERSION_KEY = `${STORAGE_PREFIX}_dataVersion`;
       const HIGH_SCORE_KEY = `${STORAGE_PREFIX}_highScore_v${STORAGE_VERSION}`;
@@ -628,7 +641,7 @@
       const QUESTIONS_PER_LEVEL = 5;
       const AUDIO_POOL_SIZE = 4;
       
-      // ✅ Central registry برای مدال‌ها
+      // ✅ تعریف مدال‌ها به صورت central registry
       const MEDAL_DEFINITIONS = {
         streak5: { id: 'streak5', text: '🔥 استریک ۵', icon: '🔥' },
         streak10: { id: 'streak10', text: '🔥🔥 استریک ۱۰', icon: '🔥🔥' },
@@ -671,24 +684,16 @@
           };
           audioNodes.push(osc);
           
-          // ✅ پاکسازی دوره‌ای نودهای صوتی
-          if (audioNodes.length > AUDIO_POOL_SIZE * 5) {
-            cleanupAudioNodes();
+          if (audioNodes.length > AUDIO_POOL_SIZE * 3) {
+            audioNodes = audioNodes.filter(node => {
+              try { return node.context && node.context.state !== 'closed'; } 
+              catch(e) { return false; }
+            });
           }
           return osc;
         } catch(e) {
           return null;
         }
-      }
-      
-      function cleanupAudioNodes() {
-        audioNodes = audioNodes.filter(node => {
-          try { 
-            return node.context && node.context.state !== 'closed'; 
-          } catch(e) { 
-            return false; 
-          }
-        });
       }
       
       function sfxCorrect() { initAudio(); playTone(523,'square',0.1,0.2); setTimeout(()=>playTone(659,'square',0.1,0.2),100); setTimeout(()=>playTone(784,'triangle',0.15,0.25),200); }
@@ -758,7 +763,7 @@
       function validateUnits(from, to) {
         if (!from || !to) return false;
         if (from.base !== to.base || from.dimension !== to.dimension) {
-          console.warn(`Base mismatch: ${from.base} vs ${to.base}`);
+          console.warn(`Base mismatch: ${from.base} vs ${to.base}, dimension: ${from.dimension} vs ${to.dimension}`);
           return false;
         }
         return true;
@@ -832,7 +837,7 @@
       let level = 1, questionsInLevel = 0;
       let highScore = 0, allMedals = [];
       let powerups = { time: 1, freeze: 1, hint: 1, double: 1 };
-      let doubleActive = false, frozen = false;
+      let doubleActive = false, frozen = false, freezeEndTime = 0;
       let gameMode = 'classic', newMedalsThisRound = [];
       let selectedOptionBtn = null;
       let questionHistory = [];
@@ -840,10 +845,10 @@
       let usedUnitPairHistory = [];
       let answerLock = false;
       let lastTickTime = 0;
-      let freezeStartTime = 0;  // ✅ اصلاح‌شده: یکپارچه‌سازی freeze timing
+      let accumulatedFreezeTime = 0;
       let tutorialActive = false;
       
-      // ✅ سیستم مدال‌ها
+      // ✅ سیستم پیشرفت مدال‌ها
       let medalProgress = {
         highestScore: 0,
         highestStreak: 0,
@@ -851,6 +856,7 @@
         totalAnsweredEver: 0
       };
       
+      // ✅ صف نمایش مدال‌ها
       let medalQueue = [];
       let isShowingMedal = false;
 
@@ -881,11 +887,7 @@
         return { min: 3, max: 12, ideal: 7 };
       }
 
-      // ==================== QUESTION GENERATION با کش بهبودیافته ====================
-      // ✅ کش برای جلوگیری از تولید سوال تکراری
-      let questionCache = new Set();
-      const MAX_CACHE_SIZE = 50;
-      
+      // ==================== QUESTION GENERATION ====================
       function generateQuestion() {
         const MAX_ATTEMPTS = 15;
         
@@ -962,20 +964,6 @@
           const correctAnswer = convertUnit(value, from, to);
           if (correctAnswer === null || isNaN(correctAnswer) || !isFinite(correctAnswer)) continue;
 
-          // ✅ کش کردن سوال برای جلوگیری از تکرار
-          const questionHash = `${value}-${from}-${to}`;
-          if (questionCache.has(questionHash) && attempt < MAX_ATTEMPTS - 1) {
-            continue;
-          }
-          
-          // اضافه به کش
-          questionCache.add(questionHash);
-          if (questionCache.size > MAX_CACHE_SIZE) {
-            // پاکسازی قدیمی‌ترین‌ها
-            const entries = [...questionCache];
-            questionCache = new Set(entries.slice(-MAX_CACHE_SIZE / 2));
-          }
-
           usedCategoryHistory.push(catKey);
           if (usedCategoryHistory.length > 10) usedCategoryHistory.shift();
           usedUnitPairHistory.push(pairKey);
@@ -1041,14 +1029,13 @@
         const options = new Set();
         options.add(parseFloat(correct.toFixed(DISPLAY_PRECISION)));
 
-        // ✅ استراتژی‌های متعادل‌تر برای گزینه‌ها
         const strategies = [
-          () => correct * (0.75 + Math.random() * 0.5),    // 0.75x تا 1.25x
-          () => correct + (Math.random() - 0.5) * Math.abs(correct) * 0.25,  // ±25%
-          () => correct * (1.5 + Math.random() * 0.5),     // 1.5x تا 2x
-          () => correct * (0.3 + Math.random() * 0.3),     // 0.3x تا 0.6x
-          () => correct * (2 + Math.random() * 3),         // 2x تا 5x
-          () => correct * (0.15 + Math.random() * 0.15),   // 0.15x تا 0.3x
+          () => correct * (0.7 + Math.random() * 0.6),
+          () => correct + (Math.random() - 0.5) * Math.abs(correct) * 0.3,
+          () => correct * 0.5,
+          () => correct * 2,
+          () => correct * 0.1,
+          () => correct * 10,
         ];
 
         const MAX_STRATEGY_ATTEMPTS = 30;
@@ -1071,8 +1058,8 @@
             : [
                 clampEducationalNumber(correct * 0.5),
                 clampEducationalNumber(correct * 2),
-                clampEducationalNumber(correct * 0.25),
-                clampEducationalNumber(correct * 4),
+                clampEducationalNumber(correct * 0.1),
+                clampEducationalNumber(correct * 10),
                 clampEducationalNumber(correct * 0.75),
                 clampEducationalNumber(correct * 1.5),
               ];
@@ -1088,7 +1075,8 @@
         return shuffleArray([...options]).slice(0, 4);
       }
 
-      // ==================== MEDAL SYSTEM (کاملاً اصلاح‌شده) ====================
+      // ==================== MEDAL SYSTEM (اصلاح‌شده) ====================
+      // ✅ بارگذاری پیشرفت مدال‌ها
       function loadMedalProgress() {
         try {
           const raw = localStorage.getItem(MEDAL_PROGRESS_KEY);
@@ -1106,6 +1094,7 @@
         }
       }
       
+      // ✅ ذخیره پیشرفت مدال‌ها
       function saveMedalProgress() {
         try {
           localStorage.setItem(MEDAL_PROGRESS_KEY, JSON.stringify(medalProgress));
@@ -1114,6 +1103,7 @@
         }
       }
       
+      // ✅ به‌روزرسانی پیشرفت مدال‌ها
       function updateMedalProgress() {
         medalProgress.highestScore = Math.max(medalProgress.highestScore, score);
         medalProgress.highestStreak = Math.max(medalProgress.highestStreak, bestStreak);
@@ -1122,7 +1112,7 @@
         saveMedalProgress();
       }
       
-      // ✅ سیستم صف مدال‌ها event-driven
+      // ✅ نمایش صف مدال‌ها
       function showMedalQueue() {
         if (isShowingMedal || medalQueue.length === 0) return;
         
@@ -1132,14 +1122,25 @@
         
         if (medal) {
           medalMessage.textContent = medal.text;
-          medalModalEl.classList.add('active');
+          medalModal.classList.add('active');
           sfxMedal();
         }
+        
+        // بعد از بسته شدن مودال، مدال بعدی را نشان بده
+        setTimeout(() => {
+          if (!medalModal.classList.contains('active')) {
+            isShowingMedal = false;
+            showMedalQueue();
+          }
+        }, 3000);
       }
       
+      // ✅ سیستم چک مدال‌ها با شرط‌های بهتر
       function checkMedals() {
+        // به‌روزرسانی پیشرفت
         updateMedalProgress();
         
+        // شرط‌های ساده‌تر و قابل دسترس‌تر
         const conditions = {
           streak5: () => bestStreak >= 5,
           streak10: () => bestStreak >= 10,
@@ -1147,7 +1148,7 @@
           score300: () => score >= 300,
           score500: () => score >= 500,
           level5: () => level >= 5,
-          marathon: () => totalAnswered >= 20
+          marathon: () => totalAnswered >= 20  // کاهش از ۳۰ به ۲۰
         };
         
         for (const [id, condition] of Object.entries(conditions)) {
@@ -1156,25 +1157,26 @@
             newMedalsThisRound.push(id);
             medalQueue.push(id);
             
+            // ذخیره فوری
             saveData();
           }
         }
         
-        // نمایش صف
+        // نمایش صف مدال‌ها
         if (!isShowingMedal && medalQueue.length > 0) {
           showMedalQueue();
         }
       }
       
-      // ✅ بستن مودال مدال event-driven
+      // ✅ بستن مودال مدال و ادامه صف
       function closeMedalModal() {
-        medalModalEl.classList.remove('active');
+        medalModal.classList.remove('active');
         isShowingMedal = false;
         
-        // نمایش مدال بعدی
+        // نمایش مدال بعدی در صف
         setTimeout(() => {
           showMedalQueue();
-        }, 300);
+        }, 500);
       }
 
       // ==================== DOM ELEMENTS ====================
@@ -1200,14 +1202,14 @@
       const totalQuestionsSpan = document.getElementById('totalQuestions');
       const bestStreakSpan = document.getElementById('bestStreakSpan');
       const finalLevelSpan = document.getElementById('finalLevelSpan');
-      const medalsEarnedText = document.getElementById('medalsEarnedText');
+      const medalsEarned = document.getElementById('medalsEarned');
       const medalsSummary = document.getElementById('medalsSummary');
       const newRecordText = document.getElementById('newRecordText');
       const highScoreDisplay = document.getElementById('highScoreDisplay');
       const totalMedalsDisplay = document.getElementById('totalMedalsDisplay');
       const timeSelect = document.getElementById('timeSelect');
       const modeSelect = document.getElementById('modeSelect');
-      const medalModalEl = document.getElementById('medalModal');  // ✅ اصلاح نام
+      const medalModalEl = document.getElementById('medalModal');
       const medalMessage = document.getElementById('medalMessage');
       const powerupBar = document.getElementById('powerupBar');
       const tutorialModal = document.getElementById('tutorialModal');
@@ -1220,7 +1222,7 @@
           if (currentVersion < STORAGE_VERSION) {
             console.log(`Migrating data from v${currentVersion} to v${STORAGE_VERSION}`);
             
-            const oldVersions = [33, 34, 35, 36, 37];
+            const oldVersions = [33, 34, 35, 36];
             
             for (const oldVer of oldVersions) {
               if (oldVer >= currentVersion && oldVer < STORAGE_VERSION) {
@@ -1266,6 +1268,7 @@
           allMedals = [];
         }
         
+        // ✅ بارگذاری پیشرفت مدال‌ها
         loadMedalProgress();
       }
 
@@ -1335,7 +1338,7 @@
       document.getElementById('playAgainEnd')?.addEventListener('click', restartGame);
       document.getElementById('submitAnswer')?.addEventListener('click', handleSubmit);
       
-      // ✅ اصلاح event listener برای بستن مودال مدال
+      // ✅ اصلاح event listener بستن مودال مدال
       document.getElementById('closeMedalModal')?.addEventListener('click', closeMedalModal);
 
       powerupBar?.addEventListener('click', (e) => {
@@ -1473,6 +1476,7 @@
             updatePowerupIcons();
           }
           
+          // ✅ چک مدال‌ها بعد از هر جواب درست
           checkMedals();
           
           if (gameMode === 'speed') { timeLeft = 10; updateUI(); }
@@ -1511,7 +1515,8 @@
             break;
           case 'freeze':
             frozen = true;
-            freezeStartTime = Date.now();  // ✅ اصلاح‌شده
+            freezeEndTime = Date.now() + 5000;
+            accumulatedFreezeTime = 0;
             break;
           case 'hint':
             selectedOptionBtn = null;
@@ -1554,13 +1559,12 @@
       function updateUI() {
         scoreDisplay.textContent = score;
         timerDisplay.textContent = timeLeft;
-        // ✅ اصلاح off-by-one: نمایش تعداد واقعی سوالات پاسخ داده شده
-        roundDisplay.textContent = totalAnswered;
+        roundDisplay.textContent = totalAnswered + 1;
         levelDisplay.textContent = level;
         timerBox.classList.toggle('danger', timeLeft <= 10);
       }
 
-      // ==================== TIMER با freeze یکپارچه ====================
+      // ==================== TIMER ====================
       let timerId = 0;
 
       function resetTimer() {
@@ -1569,8 +1573,9 @@
           timerId = 0;
         }
         frozen = false;
-        freezeStartTime = 0;
+        freezeEndTime = 0;
         lastTickTime = 0;
+        accumulatedFreezeTime = 0;
       }
 
       function startTimer() {
@@ -1584,23 +1589,22 @@
           const elapsed = now - lastTickTime;
           lastTickTime = now;
           
-          // ✅ اصلاح freeze: استفاده از freezeStartTime یکپارچه
           if (frozen) {
-            const freezeElapsed = now - freezeStartTime;
-            if (freezeElapsed < 5000) {
-              return; // هنوز در حالت freeze
+            accumulatedFreezeTime += elapsed;
+            if (accumulatedFreezeTime >= 5000) {
+              frozen = false;
+              freezeEndTime = 0;
+              accumulatedFreezeTime = 0;
+            } else {
+              return;
             }
-            // freeze تمام شده
-            frozen = false;
-            freezeStartTime = 0;
           }
           
-          // جبران background throttling
           if (elapsed > 2000) {
             const lostTicks = Math.floor(elapsed / 1000) - 1;
             if (lostTicks > 0) {
               timeLeft = Math.max(0, timeLeft - lostTicks);
-              console.warn(`Compensating for ${lostTicks} lost seconds`);
+              console.warn(`Compensating for ${lostTicks} lost seconds (tab was in background)`);
             }
           }
           
@@ -1621,25 +1625,25 @@
         questionHistory = [];
         usedCategoryHistory = [];
         usedUnitPairHistory = [];
-        questionCache = new Set();  // ✅ پاکسازی کش
         level = 1;
         questionsInLevel = 0;
         powerups = { time: 1, freeze: 1, hint: 1, double: 1 };
         doubleActive = false;
         frozen = false;
-        freezeStartTime = 0;
+        freezeEndTime = 0;
         gameActive = false;
         currentQuestion = null;
         newMedalsThisRound = [];
         selectedOptionBtn = null;
         answerLock = false;
         lastTickTime = 0;
+        accumulatedFreezeTime = 0;
         gameMode = modeSelect?.value || 'classic';
         
         // ✅ ریست صف مدال‌ها
         medalQueue = [];
         isShowingMedal = false;
-        if (medalModalEl) medalModalEl.classList.remove('active');
+        medalModalEl.classList.remove('active');
       }
 
       function startGame() {
@@ -1667,7 +1671,7 @@
         resetTimer();
         sfxGameOver();
         
-        // ✅ چک نهایی مدال‌ها
+        // ✅ چک نهایی مدال‌ها قبل از نمایش پایان
         checkMedals();
         
         playArea.style.display = 'none';
@@ -1677,16 +1681,16 @@
         bestStreakSpan.textContent = bestStreak;
         finalLevelSpan.textContent = level;
         
-        // ✅ نمایش مدال‌ها
+        // ✅ نمایش مدال‌های این دور با آیکون
         if (newMedalsThisRound.length > 0) {
           medalsSummary.innerHTML = newMedalsThisRound.map(id => {
             const medal = MEDAL_DEFINITIONS[id];
             return medal ? `<span class="medal-badge">${medal.icon} ${medal.text}</span>` : '';
           }).join('');
-          if (medalsEarnedText) medalsEarnedText.textContent = '🏅 مدال‌های این دور:';
+          medalsEarned.textContent = '';
         } else {
           medalsSummary.innerHTML = '';
-          if (medalsEarnedText) medalsEarnedText.textContent = 'این دور مدال جدیدی نگرفتی! 😢';
+          medalsEarned.textContent = 'این دور مدال جدیدی نگرفتی! 😢';
         }
         
         let isNew = false;
@@ -1695,6 +1699,7 @@
         if (highScoreDisplay) highScoreDisplay.textContent = highScore;
         if (totalMedalsDisplay) totalMedalsDisplay.textContent = allMedals.length;
         
+        // ✅ ذخیره پیشرفت مدال‌ها
         saveMedalProgress();
       }
 
@@ -1708,7 +1713,14 @@
         resetTimer();
         gameActive = false;
         answerLock = false;
-        cleanupAudioNodes();
+        
+        audioNodes.forEach(node => {
+          try { 
+            node.stop(); 
+            node.disconnect(); 
+          } catch(e) {}
+        });
+        audioNodes = [];
         
         if (audioCtx && audioCtx.state !== 'closed') {
           try { audioCtx.close(); } catch(e) {}
