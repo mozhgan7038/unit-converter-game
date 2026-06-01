@@ -1,869 +1,1438 @@
-<!doctype html>
-<html lang="fa" dir="rtl">
+<!DOCTYPE html>
+<html lang="fa">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>لیگ تبدیل واحدها — کلاس ششم</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=1.5">
+  <title>نبرد واحدها 3.6 | نسخه نهایی ⚔️</title>
+  
+  <!-- 🟢 فونت وزیرمتن -->
+  <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+  
   <style>
-    :root{
-      --bg:#0b1220;
-      --card:#101a33;
-      --card2:#0f1a2e;
-      --text:#e8f0ff;
-      --muted:#a7b7e6;
-      --accent:#4dd2ff;
-      --good:#39d98a;
-      --bad:#ff5c7a;
-      --warn:#ffd166;
-      --line:#22315f;
-      --shadow: 0 14px 40px rgba(0,0,0,.45);
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Vazirmatn', 'Segoe UI', 'Tahoma', sans-serif;
+      background: radial-gradient(circle at 20% 20%, #1a3327 0%, #0d1f14 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 15px;
+      direction: rtl;
+      position: relative;
+      overflow-x: hidden;
     }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
-      background: radial-gradient(1200px 700px at 80% -10%, rgba(77,210,255,.25), transparent 55%),
-                  radial-gradient(900px 600px at 10% 0%, rgba(255,92,122,.18), transparent 60%),
-                  linear-gradient(180deg, #070c16, var(--bg));
-      color:var(--text);
-      min-height:100vh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:18px;
-    }
-    .wrap{width:min(1050px, 100%); }
-    .topbar{
-      display:flex; gap:12px; flex-wrap:wrap;
-      align-items:stretch; justify-content:space-between;
-      margin-bottom:12px;
-    }
-    .brand{
-      flex:1;
-      background: linear-gradient(135deg, rgba(77,210,255,.18), rgba(255,92,122,.10));
-      border:1px solid rgba(255,255,255,.07);
-      border-radius:16px;
-      padding:12px 14px;
-      box-shadow: var(--shadow);
-      min-width: 280px;
-    }
-    .brand h1{margin:0 0 6px; font-size:18px; letter-spacing:.2px}
-    .brand p{margin:0; color:var(--muted); font-size:12.5px; line-height:1.7}
-    .hud{
-      display:flex; gap:10px; flex-wrap:wrap;
-      min-width: 280px;
-      justify-content:flex-end;
-      flex:1;
-    }
-    .pill{
-      background: rgba(16,26,51,.85);
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:14px;
-      padding:10px 12px;
-      box-shadow: var(--shadow);
-      min-width: 140px;
-    }
-    .pill .k{color:var(--muted); font-size:12px}
-    .pill .v{font-weight:800; font-size:16px; margin-top:4px}
-    .grid{
-      display:grid;
-      grid-template-columns: 1.2fr .8fr;
-      gap:12px;
-    }
-    @media (max-width: 920px){
-      .grid{grid-template-columns: 1fr}
-      .hud{justify-content:flex-start}
-    }
-    .card{
-      background: linear-gradient(180deg, rgba(16,26,51,.92), rgba(12,20,40,.92));
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:18px;
-      box-shadow: var(--shadow);
-      padding:14px;
-    }
-    .card h2{margin:0 0 10px; font-size:15px; color:#dbe7ff}
-    .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
-    .btn{
-      cursor:pointer;
-      border:none;
-      border-radius:14px;
-      padding:10px 12px;
-      background: rgba(77,210,255,.16);
-      color: var(--text);
-      font-weight:700;
-      border:1px solid rgba(77,210,255,.35);
-      transition: transform .05s ease, background .15s ease, border-color .15s ease;
-      user-select:none;
-    }
-    .btn:hover{background: rgba(77,210,255,.22); border-color: rgba(77,210,255,.55)}
-    .btn:active{transform: translateY(1px)}
-    .btn.secondary{
-      background: rgba(255,255,255,.06);
-      border-color: rgba(255,255,255,.12);
-    }
-    .btn.danger{
-      background: rgba(255,92,122,.14);
-      border-color: rgba(255,92,122,.35);
-    }
-    .btn.good{
-      background: rgba(57,217,138,.14);
-      border-color: rgba(57,217,138,.38);
-    }
-    select, input{
-      background: rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.14);
-      border-radius:12px;
-      padding:10px 10px;
-      color:var(--text);
-      outline:none;
-      min-width: 140px;
-    }
-    input{min-width: 200px}
-    .qbox{
-      border-radius:16px;
-      border:1px solid rgba(255,255,255,.08);
-      background: rgba(10,16,32,.55);
-      padding:12px;
-    }
-    .qtitle{
-      display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between;
-      margin-bottom:10px;
-    }
-    .badge{
-      padding:6px 10px;
-      border-radius:999px;
-      font-size:12px;
-      border:1px solid rgba(255,255,255,.12);
-      color: var(--muted);
-      background: rgba(255,255,255,.05);
-    }
-    .question{
-      font-size:18px;
-      font-weight:900;
-      line-height:1.8;
-      letter-spacing:.2px;
-    }
-    .question .num{
-      color: #ffffff;
-      background: rgba(77,210,255,.16);
-      border:1px solid rgba(77,210,255,.35);
-      padding:2px 8px;
-      border-radius:12px;
-      margin: 0 4px;
-      display:inline-block;
-    }
-    .answerGrid{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:10px;
-      margin-top:12px;
-    }
-    @media (max-width: 560px){
-      .answerGrid{grid-template-columns: 1fr}
-    }
-    .choice{
-      text-align:right;
-      width:100%;
-      padding:12px 12px;
-      border-radius:16px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.05);
-      color: var(--text);
-      cursor:pointer;
-      font-weight:800;
-      transition: border-color .15s ease, background .15s ease, transform .05s ease;
-    }
-    .choice:hover{
-      background: rgba(255,255,255,.075);
-      border-color: rgba(77,210,255,.35);
-    }
-    .choice:active{transform: translateY(1px)}
-    .choice.correct{
-      background: rgba(57,217,138,.12);
-      border-color: rgba(57,217,138,.55);
-    }
-    .choice.wrong{
-      background: rgba(255,92,122,.12);
-      border-color: rgba(255,92,122,.55);
-    }
-    .log{
-      font-size:12.5px;
-      color: var(--muted);
-      line-height:1.7;
-      max-height: 240px;
-      overflow:auto;
-      border-top: 1px solid rgba(255,255,255,.08);
-      padding-top:10px;
-      margin-top:10px;
-    }
-    .meter{
-      height: 10px;
-      background: rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:999px;
-      overflow:hidden;
-    }
-    .meter > div{
-      height:100%;
+
+    .particles-container {
+      position: fixed;
+      top: 0;
+      left: 0;
       width: 100%;
-      background: linear-gradient(90deg, rgba(255,209,102,.95), rgba(77,210,255,.95));
-      transform-origin:right center;
-      transform: scaleX(1);
-      transition: transform .2s linear;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
     }
-    .mini{
-      display:flex; align-items:center; justify-content:space-between;
-      color: var(--muted); font-size:12px; margin:8px 0 0;
+
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      animation: floatUp var(--duration) infinite ease-in;
+      animation-delay: var(--delay);
+      opacity: 0;
     }
-    .hr{height:1px; background: rgba(255,255,255,.08); margin:10px 0}
-    .small{font-size:12px; color: var(--muted); line-height:1.7}
-    .table{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:8px;
+
+    @keyframes floatUp {
+      0% { transform: translateY(100vh) scale(0); opacity: 0; }
+      10% { opacity: 0.7; }
+      90% { opacity: 0.1; }
+      100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
     }
-    .stat{
-      padding:10px;
-      border:1px solid rgba(255,255,255,.09);
-      background: rgba(255,255,255,.05);
-      border-radius:14px;
+
+    .game-container {
+      max-width: 750px;
+      width: 100%;
+      background: linear-gradient(180deg, #1e3324 0%, #142015 100%);
+      border: 3px solid #c9a44b;
+      border-radius: 48px 48px 40px 40px;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.8), 0 0 30px rgba(230,180,34,0.3);
+      padding: 20px 20px 30px;
+      position: relative;
+      z-index: 2;
+      color: #f0e6c5;
+      transition: 0.3s;
     }
-    .stat .k{font-size:12px; color:var(--muted)}
-    .stat .v{font-size:16px; font-weight:900; margin-top:4px}
-    .footerNote{
-      margin-top:10px;
-      font-size:12px;
-      color: var(--muted);
+
+    .game-container.shake {
+      animation: shake 0.4s ease-in-out;
+    }
+
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      25% { transform: translateX(-8px); }
+      75% { transform: translateX(8px); }
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(180deg, #2d3f2a 0%, #1a2616 100%);
+      border: 2px solid #c9a95c;
+      border-radius: 60px;
+      padding: 10px 18px;
+      margin-bottom: 15px;
+      box-shadow: 0 6px 0 #0f130c;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .score-box, .timer-box, .round-box, .level-box {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #0d140f;
+      border-radius: 40px;
+      padding: 6px 14px;
+      border: 1px solid #dbb45c;
+      font-weight: bold;
+      font-size: 0.95rem;
+      color: #ffd966;
+      font-family: 'Vazirmatn', sans-serif;
+    }
+
+    .timer-box { color: #ffb347; background: #1e1a0f; transition: 0.3s; }
+    .timer-box.danger { background: #3d1111; border-color: #ff5555; animation: pulse 0.8s infinite; }
+
+    @keyframes pulse {
+      0%,100% { box-shadow: 0 0 10px #ff4444; }
+      50% { box-shadow: 0 0 25px #ff0000; }
+    }
+
+    .challenge-area {
+      background: radial-gradient(circle at center, #263b26, #152014);
+      border: 2px dashed #c7a252;
+      border-radius: 40px;
+      padding: 20px 15px;
+      margin: 15px 0;
+      text-align: center;
+      position: relative;
+    }
+
+    .category-badge {
+      position: absolute;
+      top: 10px;
+      left: 15px;
+      background: #b4913c;
+      color: #0b140b;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: bold;
+      font-family: 'Vazirmatn', sans-serif;
+    }
+
+    .difficulty-indicator {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      color: #f5a442;
+      font-size: 0.9rem;
+    }
+
+    .question-text {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: #f7eac4;
+      text-shadow: 0 4px 0 #3a4a2a;
+      margin: 5px 0 15px;
+      background: #0c130c;
+      display: inline-block;
+      padding: 8px 30px;
+      border-radius: 50px;
+      font-family: 'Vazirmatn', sans-serif;
+    }
+
+    .unit-label {
+      font-size: 1.4rem;
+      background: #b4913c;
+      color: #0b140b;
+      padding: 4px 18px;
+      border-radius: 30px;
+      display: inline-block;
+      margin: 0 5px;
+      font-weight: bold;
+      font-family: 'Vazirmatn', sans-serif;
+    }
+
+    .arrow-icon { font-size: 2rem; margin: 0 8px; }
+
+    .input-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .answer-input {
+      width: 130px;
+      padding: 12px;
+      font-size: 1.6rem;
+      text-align: center;
+      background: #fef7e6;
+      border: 3px solid #caa65a;
+      border-radius: 30px;
+      outline: none;
+      font-weight: bold;
+      color: #1f3b1f;
+      box-shadow: 0 0 15px rgba(230,180,34,0.5);
+      transition: 0.2s;
+      font-family: 'Vazirmatn', sans-serif;
+    }
+
+    .answer-input:disabled {
+      opacity: 0.6;
+      background: #e0d8c0;
+      cursor: not-allowed;
+    }
+
+    .submit-btn {
+      background: linear-gradient(180deg, #f3c45a 0%, #b57c1a 100%);
+      border: none;
+      color: #1e2b0c;
+      font-weight: bold;
+      font-size: 1.2rem;
+      padding: 12px 22px;
+      border-radius: 40px;
+      cursor: pointer;
+      border-bottom: 5px solid #6b4a12;
+      transition: 0.1s;
+      font-family: 'Vazirmatn', sans-serif;
+    }
+
+    .submit-btn:active { border-bottom-width: 2px; transform: translateY(3px); }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 10px;
+      margin: 15px 0;
+    }
+
+    .option-btn {
+      background: linear-gradient(180deg, #354a2e, #1c2816);
+      border: 2px solid #8f7a4b;
+      border-radius: 25px;
+      padding: 10px 5px;
+      font-weight: bold;
+      font-size: 1rem;
+      color: #f3deaa;
+      cursor: pointer;
+      transition: all 0.15s;
+      word-break: break-all;
+      font-family: 'Vazirmatn', sans-serif;
+    }
+
+    .option-btn:hover:not(.disabled-option):not(.selected-option) {
+      background: #4a633b;
+      border-color: #e7b43a;
+      transform: scale(1.03);
+    }
+
+    .option-btn.disabled-option {
+      opacity: 0.3;
+      pointer-events: none;
+      text-decoration: line-through;
+      cursor: not-allowed;
+    }
+
+    .option-btn.selected-option {
+      border-color: #f3c45a;
+      box-shadow: 0 0 15px #f3c45a;
+      background: #4a633b;
+    }
+
+    .feedback {
+      margin: 8px 0;
+      font-weight: bold;
+      min-height: 30px;
+      font-size: 1.2rem;
+      text-align: center;
+      font-family: 'Vazirmatn', sans-serif;
+    }
+    .feedback.correct-feedback { color: #a5e65c; text-shadow: 0 0 10px #5f9e2c; }
+    .feedback.wrong-feedback { color: #ff7b6b; text-shadow: 0 0 10px #b32a1a; }
+
+    .formula-box {
+      background: rgba(0,0,0,0.4);
+      border-radius: 15px;
+      padding: 8px 15px;
+      margin: 8px auto;
+      font-size: 0.9rem;
+      color: #ffd966;
+      display: inline-block;
+      direction: ltr;
+      font-family: 'Vazirmatn', sans-serif;
+    }
+
+    .start-btn {
+      background: linear-gradient(180deg, #e6a822, #b57c1a);
+      border: none;
+      font-size: 1.1rem;
+      padding: 10px 24px;
+      border-radius: 30px;
+      font-weight: bold;
+      color: #0a1f0a;
+      cursor: pointer;
+      border-bottom: 5px solid #7a5213;
+      margin: 5px;
+      transition: 0.1s;
+      font-family: 'Vazirmatn', sans-serif;
+    }
+
+    .start-btn:active {
+      border-bottom-width: 2px;
+      transform: translateY(3px);
+    }
+
+    .combo-effect {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #ffd966;
+      pointer-events: none;
+      z-index: 100;
+      animation: comboPopup 1s ease-out forwards;
+      font-family: 'Vazirmatn', sans-serif;
+    }
+    @keyframes comboPopup {
+      0% { opacity:1; transform: translate(-50%,-50%) scale(0.5); }
+      50% { opacity:1; transform: translate(-50%,-80%) scale(1.3); }
+      100% { opacity:0; transform: translate(-50%,-150%) scale(1); }
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.85);
+      z-index: 10;
+      justify-content: center;
+      align-items: center;
+      backdrop-filter: blur(3px);
+    }
+    .modal.active { display: flex; }
+    
+    .modal-content {
+      background: linear-gradient(180deg, #1e3324 0%, #142015 100%);
+      border: 3px solid #c9a44b;
+      border-radius: 30px;
+      padding: 25px;
+      max-width: 480px;
+      width: 90%;
+      text-align: center;
+      color: #f0e6c5;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.9), 0 0 40px rgba(230,180,34,0.4);
+    }
+
+    .powerup-bar {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      align-items: center;
+      margin: 8px 0;
+      flex-wrap: wrap;
+    }
+    
+    .powerup-icon {
+      background: #2d3a2c;
+      border: 2px solid #8f7a4b;
+      border-radius: 15px;
+      padding: 6px 12px;
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: 0.2s;
+      user-select: none;
+    }
+    .powerup-icon:hover:not(.used) {
+      background: #4a633b;
+      transform: scale(1.1);
+    }
+    .powerup-icon.used {
+      opacity: 0.4;
+      pointer-events: none;
+      filter: grayscale(100%);
+      cursor: not-allowed;
+    }
+    .powerup-label { 
+      font-size: 0.7rem; 
+      display: block; 
+      color: #ccb27c; 
+      font-family: 'Vazirmatn', sans-serif;
+    }
+
+    /* 🟢 دکمه راهنما */
+    .help-btn {
+      background: linear-gradient(180deg, #5b8c5a, #3a5a38);
+      border: 2px solid #c9a44b;
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      cursor: pointer;
+      font-size: 1.3rem;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #f0e6c5;
+      user-select: none;
+      box-shadow: 0 3px 0 #2a3a24;
+      flex-shrink: 0;
+    }
+    .help-btn:hover {
+      background: linear-gradient(180deg, #6fa86d, #4a7246);
+      transform: scale(1.1);
+      box-shadow: 0 0 15px rgba(230,180,34,0.5);
+    }
+    .help-btn:active {
+      transform: scale(0.95);
+      box-shadow: 0 1px 0 #2a3a24;
+    }
+
+    /* 🟢 استایل‌های مودال راهنما */
+    .tutorial-title {
+      color: #f3cd5e;
+      text-align: center;
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+      font-family: 'Vazirmatn', sans-serif;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+
+    .tutorial-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin: 20px 0;
+      text-align: right;
+    }
+
+    .tutorial-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 15px;
+      padding: 10px 15px;
+      border: 1px solid rgba(201,169,75,0.3);
+      transition: 0.2s;
+      font-family: 'Vazirmatn', sans-serif;
+      font-size: 0.95rem;
+    }
+    .tutorial-item:hover {
+      background: rgba(255,255,255,0.1);
+      border-color: #c9a44b;
+    }
+
+    .tutorial-emoji {
+      font-size: 1.6rem;
+      min-width: 35px;
+      text-align: center;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+    }
+
+    .tutorial-text strong {
+      color: #f3cd5e;
+    }
+
+    .tutorial-divider {
+      border: none;
+      border-top: 1px solid rgba(201,169,75,0.3);
+      margin: 15px 0;
+    }
+
+    .tutorial-tip {
+      background: rgba(243,205,94,0.1);
+      border-radius: 12px;
+      padding: 10px 15px;
+      border: 1px solid rgba(243,205,94,0.3);
+      font-size: 0.85rem;
+      color: #f3cd5e;
+      font-family: 'Vazirmatn', sans-serif;
     }
   </style>
 </head>
 <body>
-<div class="wrap">
-  <div class="topbar">
-    <div class="brand">
-      <h1>لیگ تبدیل واحدها — حالت مسابقه‌ای</h1>
-      <p>برای کلاس ششم: طول، مساحت، حجم، حجم مایعات و جرم. سریع و دقیق جواب بده تا «کمبو» بگیری و امتیاز بیشتری جمع کنی.</p>
-    </div>
-    <div class="hud">
-      <div class="pill">
-        <div class="k">امتیاز</div>
-        <div class="v" id="score">0</div>
-      </div>
-      <div class="pill">
-        <div class="k">کمبو</div>
-        <div class="v" id="combo">0</div>
-      </div>
-      <div class="pill">
-        <div class="k">رکورد این مرورگر</div>
-        <div class="v" id="best">0</div>
-      </div>
-    </div>
-  </div>
+  <div class="particles-container" id="particlesContainer"></div>
 
-  <div class="grid">
-    <div class="card">
-      <div class="qbox">
-        <div class="qtitle">
-          <div class="badge" id="modeBadge">آماده</div>
-          <div class="badge" id="diffBadge">سطح: متوسط</div>
-        </div>
-
-        <div class="meter" title="زمان سؤال">
-          <div id="timeBar"></div>
-        </div>
-        <div class="mini">
-          <div>زمان باقی‌مانده: <b id="timeLeft">0.0</b> ثانیه</div>
-          <div>سؤال <b id="qIndex">0</b> از <b id="qTotal">0</b></div>
-        </div>
-
-        <div class="hr"></div>
-
-        <div class="question" id="question">برای شروع «شروع مسابقه» را بزن.</div>
-
-        <div class="answerGrid" id="answers"></div>
-
-        <div class="row" style="margin-top:12px; justify-content:space-between">
-          <div class="row">
-            <button class="btn good" id="startBtn">شروع مسابقه</button>
-            <button class="btn secondary" id="nextBtn" disabled>سؤال بعدی</button>
-            <button class="btn danger" id="stopBtn" disabled>پایان</button>
-          </div>
-
-          <div class="row">
-            <label class="small">سطح:</label>
-            <select id="difficulty">
-              <option value="easy">آسان</option>
-              <option value="mid" selected>متوسط</option>
-              <option value="hard">سخت</option>
-            </select>
-
-            <label class="small">حالت:</label>
-            <select id="playlist">
-              <option value="mix" selected>همه‌ی مبحث‌ها (Mix)</option>
-              <option value="length">طول</option>
-              <option value="area">مساحت</option>
-              <option value="volume">حجم</option>
-              <option value="liquid">حجم مایعات</option>
-              <option value="mass">جرم</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="log" id="log"></div>
-      </div>
+  <div class="game-container" id="gameApp">
+    <div class="header">
+      <div class="score-box">🏆 <span id="scoreDisplay">0</span></div>
+      <div class="level-box">⭐ سطح <span id="levelDisplay">1</span></div>
+      <div class="round-box">🎯 <span id="roundDisplay">1</span></div>
+      <div class="timer-box" id="timerBox">⏳ <span id="timerDisplay">90</span></div>
     </div>
 
-    <div class="card">
-      <h2>قوانین مسابقه</h2>
-      <div class="small">
-        <ul>
-          <li>هر مسابقه 12 سؤال است. هر سؤال زمان محدود دارد.</li>
-          <li>هر پاسخ درست امتیاز می‌دهد. اگر سریع‌تر جواب بدهی، امتیاز بیشتر می‌گیری.</li>
-          <li>پاسخ‌های درست پشت سر هم «کمبو» می‌سازد و امتیاز را ضرب می‌کند.</li>
-          <li>پاسخ غلط: کمبو صفر می‌شود و کمی زمان/امتیاز از دست می‌دهی.</li>
-          <li>سؤال‌ها رندوم هستند و از تکرار پشت سر هم جلوگیری می‌شود.</li>
-        </ul>
+    <div id="dynamicContent">
+      <div id="startScreen" style="text-align:center; padding:20px;">
+        <h2 style="color:#e7c568; font-family: 'Vazirmatn', sans-serif;">⚔️ نبرد واحدها 3.6 ⚔️</h2>
+        <p style="margin:15px 0; font-family: 'Vazirmatn', sans-serif;">📏 طول | 📐 مساحت | 🧊 حجم | 💧 مایعات | 🏋️ جرم</p>
+        <div style="margin:10px 0;">
+          <label style="font-family: 'Vazirmatn', sans-serif;">⏱️ زمان: </label>
+          <select id="timeSelect" style="padding:6px; border-radius:20px; background:#2d3a2c; color:#f0e6c5; font-family: 'Vazirmatn', sans-serif;">
+            <option value="60">۶۰ ثانیه</option>
+            <option value="90" selected>۹۰ ثانیه</option>
+            <option value="120">۱۲۰ ثانیه</option>
+          </select>
+        </div>
+        <div style="margin:10px 0;">
+          <label style="font-family: 'Vazirmatn', sans-serif;">🎮 حالت: </label>
+          <select id="modeSelect" style="padding:6px; border-radius:20px; background:#2d3a2c; color:#f0e6c5; font-family: 'Vazirmatn', sans-serif;">
+            <option value="classic">کلاسیک</option>
+            <option value="survival">بقا (تا اولین اشتباه)</option>
+            <option value="speed">سرعتی (۱۰ ثانیه هر سوال)</option>
+          </select>
+        </div>
+        <button class="start-btn" id="startGameBtn">🚀 شروع</button>
+        <div style="margin-top:15px; font-size:0.9rem; font-family: 'Vazirmatn', sans-serif;">
+          🏅 رکورد: <span id="highScoreDisplay">0</span>
+          <br>🏅 مدال‌ها: <span id="totalMedalsDisplay">0</span>
+        </div>
       </div>
 
-      <div class="hr"></div>
-
-      <h2>آمار مسابقه</h2>
-      <div class="table">
-        <div class="stat"><div class="k">درست</div><div class="v" id="stCorrect">0</div></div>
-        <div class="stat"><div class="k">غلط</div><div class="v" id="stWrong">0</div></div>
-        <div class="stat"><div class="k">سریع‌ترین پاسخ</div><div class="v" id="stFast">—</div></div>
-        <div class="stat"><div class="k">بیشترین کمبو</div><div class="v" id="stMaxCombo">0</div></div>
+      <div id="playArea" style="display:none;">
+        <div class="powerup-bar" id="powerupBar">
+          <span class="powerup-icon" data-powerup="time" title="+۱۰ ثانیه">⏰<span class="powerup-label">زمان</span></span>
+          <span class="powerup-icon" data-powerup="freeze" title="توقف ۵ ثانیه">❄️<span class="powerup-label">فریز</span></span>
+          <span class="powerup-icon" data-powerup="hint" title="حذف ۲ گزینه">💡<span class="powerup-label">راهنما</span></span>
+          <span class="powerup-icon" data-powerup="double" title="امتیاز ×۲">⭐<span class="powerup-label">مضاعف</span></span>
+          <!-- 🟢 دکمه راهنمای همیشگی -->
+          <span class="help-btn" id="helpButton" title="راهنمای بازی">❓</span>
+        </div>
+        <div class="challenge-area">
+          <span class="category-badge" id="categoryBadge">📏 طول</span>
+          <span class="difficulty-indicator" id="difficultyIndicator">⭐</span>
+          <div style="color:#ccb27c; font-family: 'Vazirmatn', sans-serif;">تبدیل کن:</div>
+          <div class="question-text" id="questionValue">1250</div>
+          <span class="unit-label" id="fromUnit">متر</span>
+          <span class="arrow-icon">➡️</span>
+          <span class="unit-label" id="toUnit">کیلومتر</span>
+        </div>
+        <div class="input-group">
+          <input type="number" id="answerInput" class="answer-input" placeholder="عدد" step="any">
+          <button class="submit-btn" id="submitAnswer">⚔️ حمله</button>
+        </div>
+        <div class="options-grid" id="optionsContainer"></div>
+        <div class="feedback" id="feedbackMessage"></div>
+        <div class="formula-box" id="formulaDisplay" style="display:none;"></div>
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <button class="start-btn" id="restartFromPlay">🔄 شروع دوباره</button>
+          <span id="streakMessage" style="color:#f5b042; font-family: 'Vazirmatn', sans-serif;"></span>
+        </div>
       </div>
 
-      <div class="footerNote">
-        نکته معلم: اگر خواستی، می‌تونم «بانک سؤال سفارشی» هم اضافه کنم یا تبدیل‌ها رو دقیقاً مطابق کتاب درسی شما تنظیم کنم.
+      <div id="endScreen" style="display:none; text-align:center; padding:15px;">
+        <h2 style="color:#f3cd5e; font-family: 'Vazirmatn', sans-serif;">⏰ پایان!</h2>
+        <p style="font-family: 'Vazirmatn', sans-serif;">🎯 سوالات: <span id="totalQuestions">0</span></p>
+        <p style="font-family: 'Vazirmatn', sans-serif;">🏆 امتیاز: <span id="finalScoreSpan">0</span></p>
+        <p style="font-family: 'Vazirmatn', sans-serif;">🔥 بهترین استریک: <span id="bestStreakSpan">0</span></p>
+        <p style="font-family: 'Vazirmatn', sans-serif;">⭐ سطح: <span id="finalLevelSpan">1</span></p>
+        <p style="font-family: 'Vazirmatn', sans-serif;">🏅 مدال‌های جدید: <span id="medalsEarned"></span></p>
+        <p style="color:#f5c542; font-family: 'Vazirmatn', sans-serif;" id="newRecordText"></p>
+        <button class="start-btn" id="playAgainEnd">🔄 دوباره</button>
       </div>
     </div>
   </div>
-</div>
 
-<script>
-(() => {
-  // ---------- Utilities ----------
-  const $ = (id) => document.getElementById(id);
-  const rnd = (a,b) => Math.floor(Math.random()*(b-a+1))+a;
-  const choice = (arr) => arr[Math.floor(Math.random()*arr.length)];
-  const clamp = (x,a,b) => Math.max(a, Math.min(b, x));
-  const fmt = (x) => {
-    // Show integers cleanly, else show up to 6 significant digits without scientific notation when possible
-    if (Number.isInteger(x)) return String(x);
-    // avoid floating errors:
-    const y = Math.round(x * 1e9) / 1e9;
-    // convert to string with limited decimals
-    let s = y.toString();
-    if (s.includes("e")) {
-      // fallback: fixed
-      s = y.toFixed(6);
-    }
-    // trim trailing zeros
-    if (s.includes(".")) s = s.replace(/0+$/,"").replace(/\.$/,"");
-    return s;
-  };
+  <!-- 🟢 مودال راهنمای بازی (شکیل و همیشه در دسترس) -->
+  <div class="modal" id="tutorialModal">
+    <div class="modal-content">
+      <h2 class="tutorial-title">🎮 راهنمای نبرد واحدها</h2>
+      
+      <div class="tutorial-grid">
+        <div class="tutorial-item">
+          <span class="tutorial-emoji">⚔️</span>
+          <span class="tutorial-text"><strong>حمله</strong> — ثبت پاسخ با کیبورد یا کلیک روی گزینه</span>
+        </div>
+        <div class="tutorial-item">
+          <span class="tutorial-emoji">🎯</span>
+          <span class="tutorial-text"><strong>گزینه‌ها</strong> — انتخاب سریع از بین ۴ گزینه پیشنهادی</span>
+        </div>
+        <div class="tutorial-item">
+          <span class="tutorial-emoji">⏰</span>
+          <span class="tutorial-text"><strong>پاورآپ زمان</strong> — ۱۰ ثانیه وقت اضافه</span>
+        </div>
+        <div class="tutorial-item">
+          <span class="tutorial-emoji">❄️</span>
+          <span class="tutorial-text"><strong>پاورآپ فریز</strong> — توقف ۵ ثانیه‌ای تایمر</span>
+        </div>
+        <div class="tutorial-item">
+          <span class="tutorial-emoji">💡</span>
+          <span class="tutorial-text"><strong>پاورآپ حذف</strong> — حذف ۲ گزینهٔ اشتباه</span>
+        </div>
+        <div class="tutorial-item">
+          <span class="tutorial-emoji">⭐</span>
+          <span class="tutorial-text"><strong>پاورآپ مضاعف</strong> — امتیاز ×۲ در پاسخ بعدی</span>
+        </div>
+      </div>
 
-  // ---------- Unit Systems ----------
-  // Use exponents relative to base unit for each category:
-  // length base: meter -> exponent in 10^k
-  // area base: m^2 -> exponent step 2
-  // volume base: m^3 -> exponent step 3
-  // mass base: gram -> exponent
-  const units = {
-    length: [
-      {key:"mm", name:"میلی‌متر", exp:-3},
-      {key:"cm", name:"سانتی‌متر", exp:-2},
-      {key:"dm", name:"دسی‌متر", exp:-1},
-      {key:"m",  name:"متر", exp:0},
-      {key:"km", name:"کیلومتر", exp:3},
-    ],
-    area: [
-      {key:"mm2", name:"میلی‌متر مربع", exp:-6},
-      {key:"cm2", name:"سانتی‌متر مربع", exp:-4},
-      {key:"dm2", name:"دسی‌متر مربع", exp:-2},
-      {key:"m2",  name:"متر مربع", exp:0},
-      {key:"km2", name:"کیلومتر مربع", exp:6},
-    ],
-    volume: [
-      {key:"mm3", name:"میلی‌متر مکعب", exp:-9},
-      {key:"cm3", name:"سانتی‌متر مکعب", exp:-6},
-      {key:"dm3", name:"دسی‌متر مکعب", exp:-3},
-      {key:"m3",  name:"متر مکعب", exp:0},
-      {key:"km3", name:"کیلومتر مکعب", exp:9},
-    ],
-    liquid: [
-      {key:"cc", name:"سی‌سی", exp:-3},   // relative to liter
-      {key:"L",  name:"لیتر", exp:0},
-    ],
-    mass: [
-      {key:"mg", name:"میلی‌گرم", exp:-3},
-      {key:"g",  name:"گرم", exp:0},
-      {key:"kg", name:"کیلوگرم", exp:3},
-      {key:"t",  name:"تن", exp:6}, // 1 t = 10^6 g
-    ],
-  };
+      <hr class="tutorial-divider">
 
-  function convert(value, fromUnit, toUnit){
-    // value * 10^(fromExp - toExp)
-    const pow = fromUnit.exp - toUnit.exp;
-    return value * Math.pow(10, pow);
-  }
+      <div class="tutorial-tip">
+        💡 <strong>نکته:</strong> هر ۵ پاسخ درست = ارتقاء سطح + دریافت پاورآپ جدید!
+      </div>
 
-  // ---------- Game State ----------
-  const TOTAL_QUESTIONS = 12;
-  let running = false;
+      <button class="start-btn" id="closeTutorialModal" style="display:block; margin: 15px auto 0;">✅ فهمیدم</button>
+    </div>
+  </div>
 
-  let score = 0;
-  let combo = 0;
-  let maxCombo = 0;
-  let correct = 0;
-  let wrong = 0;
-  let fastest = null;
+  <!-- مودال مدال -->
+  <div class="modal" id="medalModal">
+    <div class="modal-content">
+      <h2 style="font-family: 'Vazirmatn', sans-serif;">🏅 مدال جدید!</h2>
+      <p id="medalMessage" style="font-family: 'Vazirmatn', sans-serif;"></p>
+      <button class="start-btn" id="closeMedalModal">باشه!</button>
+    </div>
+  </div>
 
-  let qNum = 0;
-  let current = null;
-  let locked = false;
+  <script>
+    (function() {
+      // ==================== AUDIO ENGINE ====================
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      let audioCtx;
+      function initAudio() { if (!audioCtx) audioCtx = new AudioCtx(); if (audioCtx.state === 'suspended') audioCtx.resume(); }
+      function playTone(freq, type, duration, gain = 0.3) {
+        if(!audioCtx) return;
+        try {
+          const osc = audioCtx.createOscillator(), vol = audioCtx.createGain();
+          osc.type = type; osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+          vol.gain.setValueAtTime(gain, audioCtx.currentTime);
+          vol.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+          osc.connect(vol); vol.connect(audioCtx.destination);
+          osc.start(audioCtx.currentTime); osc.stop(audioCtx.currentTime + duration);
+        } catch(e) {}
+      }
+      function sfxCorrect() { initAudio(); playTone(523,'square',0.1,0.2); setTimeout(()=>playTone(659,'square',0.1,0.2),100); setTimeout(()=>playTone(784,'triangle',0.15,0.25),200); }
+      function sfxWrong() { initAudio(); playTone(180,'sawtooth',0.15,0.2); setTimeout(()=>playTone(140,'sawtooth',0.2,0.2),120); const c=document.getElementById('gameApp'); if(c){c.classList.add('shake');setTimeout(()=>c.classList.remove('shake'),400);} }
+      function sfxCombo(s) { initAudio(); const b=600+s*40; playTone(b,'triangle',0.1,0.2); setTimeout(()=>playTone(b*1.4,'triangle',0.1,0.2),80); }
+      function sfxTick() { initAudio(); playTone(800,'sine',0.05,0.06); }
+      function sfxGameOver() { initAudio(); playTone(300,'sawtooth',0.2,0.3); setTimeout(()=>playTone(200,'sawtooth',0.3,0.2),200); }
+      function sfxStart() { initAudio(); playTone(440,'triangle',0.12,0.2); setTimeout(()=>playTone(554,'triangle',0.12,0.2),120); setTimeout(()=>playTone(659,'triangle',0.15,0.25),240); }
+      function sfxMedal() { initAudio(); playTone(600,'triangle',0.1,0.2); setTimeout(()=>playTone(800,'triangle',0.1,0.2),100); setTimeout(()=>playTone(1000,'triangle',0.15,0.3),200); }
 
-  let timer = null;
-  let tStart = 0;
-  let timeLimit = 12_000; // ms
-  let timeLeftMs = timeLimit;
+      // ==================== PARTICLE SYSTEM ====================
+      const MAX_PARTICLES = 25;
+      const particlesContainer = document.getElementById('particlesContainer');
 
-  const recentSignatures = []; // avoid repeats
-  const RECENT_LIMIT = 10;
+      function initParticles() {
+        particlesContainer.innerHTML = '';
+        const fragment = document.createDocumentFragment();
+        const colors = ['#e7c568', '#f5a442', '#ffd966'];
+        for (let i = 0; i < MAX_PARTICLES; i++) {
+          const p = document.createElement('div');
+          p.className = 'particle';
+          const size = Math.random() * 6 + 3;
+          p.style.width = size + 'px';
+          p.style.height = size + 'px';
+          p.style.left = Math.random() * 100 + '%';
+          p.style.setProperty('--duration', (Math.random() * 6 + 5) + 's');
+          p.style.setProperty('--delay', Math.random() * 6 + 's');
+          p.style.background = colors[Math.floor(Math.random() * colors.length)];
+          fragment.appendChild(p);
+        }
+        particlesContainer.appendChild(fragment);
+      }
+      initParticles();
 
-  // ---------- UI ----------
-  const ui = {
-    score: $("score"),
-    combo: $("combo"),
-    best: $("best"),
-    modeBadge: $("modeBadge"),
-    diffBadge: $("diffBadge"),
-    timeLeft: $("timeLeft"),
-    timeBar: $("timeBar"),
-    qIndex: $("qIndex"),
-    qTotal: $("qTotal"),
-    question: $("question"),
-    answers: $("answers"),
-    log: $("log"),
+      // ==================== ثابت‌های مهندسی ====================
+      const EPSILON = 1e-6;
+      const DISPLAY_PRECISION = 4;
+      const HAS_SEEN_TUTORIAL_KEY = 'unitWar_hasSeenTutorial_v36';
 
-    startBtn: $("startBtn"),
-    nextBtn: $("nextBtn"),
-    stopBtn: $("stopBtn"),
+      // ==================== معماری علمی واحدها ====================
+      const unitDefinitions = {
+        'میلی متر':    { base: 'mm', dimension: 1, scale: 0,  icon: '📏', cat: 'length' },
+        'سانتی متر':   { base: 'mm', dimension: 1, scale: 1,  icon: '📏', cat: 'length' },
+        'دسی متر':     { base: 'mm', dimension: 1, scale: 2,  icon: '📏', cat: 'length' },
+        'متر':         { base: 'mm', dimension: 1, scale: 3,  icon: '📏', cat: 'length' },
+        'کیلومتر':     { base: 'mm', dimension: 1, scale: 6,  icon: '📏', cat: 'length' },
+        'میلی متر مربع':   { base: 'mm²', dimension: 2, scale: 0,  icon: '📐', cat: 'area' },
+        'سانتی متر مربع':  { base: 'mm²', dimension: 2, scale: 2,  icon: '📐', cat: 'area' },
+        'دسی متر مربع':    { base: 'mm²', dimension: 2, scale: 4,  icon: '📐', cat: 'area' },
+        'متر مربع':        { base: 'mm²', dimension: 2, scale: 6,  icon: '📐', cat: 'area' },
+        'کیلومتر مربع':    { base: 'mm²', dimension: 2, scale: 12, icon: '📐', cat: 'area' },
+        'میلی متر مکعب':   { base: 'mm³', dimension: 3, scale: 0,  icon: '🧊', cat: 'volume' },
+        'سانتی متر مکعب':  { base: 'mm³', dimension: 3, scale: 3,  icon: '🧊', cat: 'volume' },
+        'دسی متر مکعب':    { base: 'mm³', dimension: 3, scale: 6,  icon: '🧊', cat: 'volume' },
+        'متر مکعب':        { base: 'mm³', dimension: 3, scale: 9,  icon: '🧊', cat: 'volume' },
+        'کیلومتر مکعب':    { base: 'mm³', dimension: 3, scale: 18, icon: '🧊', cat: 'volume' },
+        'سی سی':          { base: 'mL', dimension: 3, scale: 0,  icon: '💧', cat: 'liquid' },
+        'لیتر':           { base: 'mL', dimension: 3, scale: 3,  icon: '💧', cat: 'liquid' },
+        'میلی گرم':       { base: 'mg', dimension: 1, scale: 0,  icon: '🏋️', cat: 'mass' },
+        'گرم':            { base: 'mg', dimension: 1, scale: 3,  icon: '🏋️', cat: 'mass' },
+        'کیلوگرم':        { base: 'mg', dimension: 1, scale: 6,  icon: '🏋️', cat: 'mass' },
+        'تن':             { base: 'mg', dimension: 1, scale: 9,  icon: '🏋️', cat: 'mass' }
+      };
 
-    difficulty: $("difficulty"),
-    playlist: $("playlist"),
+      const categories = {
+        length: { name: 'طول', icon: '📏', units: ['میلی متر','سانتی متر','دسی متر','متر','کیلومتر'] },
+        area:   { name: 'مساحت', icon: '📐', units: ['میلی متر مربع','سانتی متر مربع','دسی متر مربع','متر مربع','کیلومتر مربع'] },
+        volume: { name: 'حجم', icon: '🧊', units: ['میلی متر مکعب','سانتی متر مکعب','دسی متر مکعب','متر مکعب','کیلومتر مکعب'] },
+        liquid: { name: 'مایعات', icon: '💧', units: ['سی سی','لیتر'] },
+        mass:   { name: 'جرم', icon: '🏋️', units: ['میلی گرم','گرم','کیلوگرم','تن'] }
+      };
 
-    stCorrect: $("stCorrect"),
-    stWrong: $("stWrong"),
-    stFast: $("stFast"),
-    stMaxCombo: $("stMaxCombo"),
-  };
+      function convertUnit(value, fromUnit, toUnit) {
+        const from = unitDefinitions[fromUnit];
+        const to = unitDefinitions[toUnit];
+        if (!from || !to || from.base !== to.base) return null;
+        const scaleDiff = (from.scale - to.scale) * from.dimension;
+        return value * Math.pow(10, scaleDiff);
+      }
 
-  const BEST_KEY = "unitGameBest_v1";
-  const loadBest = () => Number(localStorage.getItem(BEST_KEY) || 0);
-  const saveBest = (v) => localStorage.setItem(BEST_KEY, String(v));
-  ui.best.textContent = loadBest();
-
-  ui.qTotal.textContent = TOTAL_QUESTIONS;
-
-  function setBadges(){
-    const diff = ui.difficulty.value;
-    ui.diffBadge.textContent =
-      diff==="easy" ? "سطح: آسان" : diff==="mid" ? "سطح: متوسط" : "سطح: سخت";
-  }
-  setBadges();
-  ui.difficulty.addEventListener("change", setBadges);
-
-  function logLine(text){
-    const div = document.createElement("div");
-    div.textContent = text;
-    ui.log.prepend(div);
-  }
-
-  function resetStats(){
-    score=0; combo=0; maxCombo=0; correct=0; wrong=0; fastest=null;
-    qNum=0; current=null; locked=false;
-    recentSignatures.length = 0;
-
-    ui.score.textContent = score;
-    ui.combo.textContent = combo;
-    ui.stCorrect.textContent = correct;
-    ui.stWrong.textContent = wrong;
-    ui.stFast.textContent = "—";
-    ui.stMaxCombo.textContent = maxCombo;
-    ui.qIndex.textContent = 0;
-    ui.question.textContent = "برای شروع «شروع مسابقه» را بزن.";
-    ui.answers.innerHTML = "";
-    ui.log.innerHTML = "";
-    ui.modeBadge.textContent = "آماده";
-    stopTimer();
-    paintTime(0,1);
-    ui.timeLeft.textContent = "0.0";
-  }
-
-  function paintTime(leftMs, limitMs){
-    const ratio = clamp(leftMs/limitMs, 0, 1);
-    ui.timeBar.style.transform = `scaleX(${ratio})`;
-    ui.timeLeft.textContent = (leftMs/1000).toFixed(1);
-  }
-
-  function stopTimer(){
-    if (timer) clearInterval(timer);
-    timer = null;
-  }
-
-  function startTimer(limit){
-    stopTimer();
-    timeLimit = limit;
-    timeLeftMs = limit;
-    tStart = performance.now();
-    paintTime(timeLeftMs, timeLimit);
-
-    timer = setInterval(() => {
-      const now = performance.now();
-      const elapsed = now - tStart;
-      timeLeftMs = Math.max(0, timeLimit - elapsed);
-      paintTime(timeLeftMs, timeLimit);
-
-      if (timeLeftMs <= 0){
-        stopTimer();
-        if (!locked && running){
-          locked = true;
-          wrong++;
-          combo = 0;
-          ui.combo.textContent = combo;
-          ui.stWrong.textContent = wrong;
-          logLine("⏱️ وقت تموم شد! (کمبو صفر شد)");
-          revealCorrect(null);
-          ui.nextBtn.disabled = false;
-          if (qNum >= TOTAL_QUESTIONS) finishGame();
+      function getConversionFormula(value, fromUnit, toUnit) {
+        const from = unitDefinitions[fromUnit];
+        const to = unitDefinitions[toUnit];
+        if (!from || !to) return '';
+        const scaleDiff = (from.scale - to.scale) * from.dimension;
+        if (scaleDiff === 0) return `${value} ${fromUnit} = ${value} ${toUnit}`;
+        const factor = Math.pow(10, Math.abs(scaleDiff));
+        const result = convertUnit(value, fromUnit, toUnit);
+        if (result === null) return '';
+        if (scaleDiff > 0) {
+          return `${value} ${fromUnit} = ${value} × ${factor.toLocaleString('fa-IR')} = ${result} ${toUnit}`;
+        } else {
+          return `${value} ${fromUnit} = ${value} ÷ ${factor.toLocaleString('fa-IR')} = ${result} ${toUnit}`;
         }
       }
-    }, 50);
-  }
 
-  // ---------- Question Generator ----------
-  function getConfig(){
-    const diff = ui.difficulty.value;
-    const pl = ui.playlist.value;
-
-    // time and scoring tuning
-    const cfg = {
-      diff,
-      playlist: pl,
-      timeMs: diff==="easy" ? 14000 : diff==="mid" ? 12000 : 9500,
-      basePts: diff==="easy" ? 90 : diff==="mid" ? 120 : 150,
-      penalty: diff==="easy" ? 25 : diff==="mid" ? 35 : 45,
-      // value complexity
-      allowDecimals: diff!=="easy",
-      maxJump: diff==="easy" ? 2 : diff==="mid" ? 3 : 4, // unit index gap
-      trickChance: diff==="hard" ? 0.45 : diff==="mid" ? 0.28 : 0.12
-    };
-    return cfg;
-  }
-
-  function pickCategory(cfg){
-    if (cfg.playlist !== "mix") return cfg.playlist;
-    // weights to keep it varied
-    const bag = ["length","length","area","area","volume","liquid","mass","mass","volume"];
-    return choice(bag);
-  }
-
-  function signatureOf(cat, fromKey, toKey, value){
-    // coarse signature to avoid obvious repeats
-    const v = Math.round(value*1000)/1000;
-    return `${cat}|${fromKey}->${toKey}|${v}`;
-  }
-
-  function generateValue(cfg, cat, fromU, toU){
-    // Create values that lead to "nice" results sometimes, but not always.
-    // Also avoid extremely tiny/huge numbers.
-    const jump = Math.abs(fromU.exp - toU.exp);
-    const isHardJump = jump >= (cat==="area" ? 4 : cat==="volume" ? 6 : 3);
-
-    // Decide if use decimal
-    const useDecimal = cfg.allowDecimals && (Math.random() < (cfg.diff==="hard" ? 0.55 : 0.35));
-
-    let value;
-    if (!useDecimal){
-      // Integer value, range depends on category
-      const ranges = {
-        length: [2, 950],
-        area: [2, 420],
-        volume: [2, 260],
-        liquid: [2, 950],
-        mass: [2, 900]
-      };
-      const [a,b] = ranges[cat];
-      value = rnd(a,b);
-
-      // occasionally make it multiple of 10/100 to allow mental math but still not trivial with big jumps
-      if (Math.random() < (cfg.trickChance + (isHardJump?0.2:0))){
-        const factor = choice([10, 10, 100, 1000]);
-        value = rnd(1, Math.floor(b/factor)) * factor;
+      // ==================== Fisher-Yates Shuffle ====================
+      function shuffleArray(arr) {
+        const a = [...arr];
+        for (let i = a.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
       }
-    } else {
-      // Decimal with 1-2 digits
-      const base = rnd(5, 450);
-      const d = choice([0.1,0.2,0.25,0.5,0.75]);
-      value = base + d;
-      if (Math.random() < 0.25) value = (rnd(10,220) / 10); // one decimal
-    }
 
-    // For km^2 or km^3 conversions, keep value smaller sometimes
-    if (cat==="area" && (fromU.key==="km2" || toU.key==="km2")){
-      value = Math.min(value, cfg.diff==="hard" ? 35 : 18);
-    }
-    if (cat==="volume" && (fromU.key==="km3" || toU.key==="km3")){
-      value = Math.min(value, cfg.diff==="hard" ? 12 : 6);
-    }
-    return value;
-  }
+      function getRandomItem(arr) {
+        if (!arr || arr.length === 0) return null;
+        return arr[Math.floor(Math.random() * arr.length)];
+      }
 
-  function buildQuestion(){
-    const cfg = getConfig();
-    const cat = pickCategory(cfg);
-    const list = units[cat];
+      // ==================== وضعیت بازی ====================
+      let score = 0, timeLeft = 90, timerInterval = null, currentQuestion = null, gameActive = false;
+      let streak = 0, bestStreak = 0, totalAnswered = 0;
+      let level = 1, questionsInLevel = 0;
+      const QUESTIONS_PER_LEVEL = 5;
+      let highScore = 0, allMedals = [];
+      let powerups = { time: 1, freeze: 1, hint: 1, double: 1 };
+      let doubleActive = false, frozen = false, freezeEndTime = 0;
+      let gameMode = 'classic', newMedalsThisRound = [];
+      let selectedOptionBtn = null;
+      let questionHistory = [];
+      let usedCategoryHistory = [];
+      let usedUnitPairHistory = [];
+      let answerLock = false;
 
-    // pick from/to with controlled jump
-    let fromIdx = rnd(0, list.length-1);
-    let toIdx = rnd(0, list.length-1);
-    let guard = 0;
+      // ==================== Difficulty Scaling ====================
+      function getDifficultyLevel() {
+        if (score < 80) return 1;
+        if (score < 200) return 2;
+        if (score < 380) return 3;
+        if (score < 600) return 4;
+        return 5;
+      }
 
-    while ((toIdx===fromIdx || Math.abs(toIdx-fromIdx) > cfg.maxJump) && guard++ < 50){
-      fromIdx = rnd(0, list.length-1);
-      toIdx = rnd(0, list.length-1);
-    }
+      function getDifficultyStars(diff) { return '⭐'.repeat(diff); }
 
-    // In liquid (only 2 units), ensure change
-    if (cat==="liquid"){
-      fromIdx = 0; toIdx = 1;
-      if (Math.random() < 0.5){ fromIdx = 1; toIdx = 0; }
-    }
+      function getAllowedCategories(diff) {
+        if (diff <= 1) return ['length', 'liquid'];
+        if (diff <= 2) return ['length', 'mass', 'liquid'];
+        if (diff <= 3) return ['length', 'mass', 'area', 'liquid'];
+        if (diff <= 4) return ['area', 'volume', 'mass', 'length'];
+        return ['volume', 'area', 'mass', 'length', 'liquid'];
+      }
 
-    const fromU = list[fromIdx];
-    const toU = list[toIdx];
+      function getScaleRange(diff) {
+        if (diff <= 1) return { min: 0, max: 2, ideal: 1 };
+        if (diff <= 2) return { min: 0, max: 4, ideal: 2 };
+        if (diff <= 3) return { min: 1, max: 6, ideal: 3 };
+        if (diff <= 4) return { min: 2, max: 9, ideal: 5 };
+        return { min: 3, max: 12, ideal: 7 };
+      }
 
-    // generate value and avoid recent repeats
-    let value = generateValue(cfg, cat, fromU, toU);
-    let sig = signatureOf(cat, fromU.key, toU.key, value);
-    let tries = 0;
-    while (recentSignatures.includes(sig) && tries++ < 25){
-      value = generateValue(cfg, cat, fromU, toU);
-      sig = signatureOf(cat, fromU.key, toU.key, value);
-    }
-    recentSignatures.unshift(sig);
-    if (recentSignatures.length > RECENT_LIMIT) recentSignatures.pop();
+      // ==================== Clamp اعداد به محدوده آموزشی ====================
+      function clampEducationalNumber(n) {
+        if (!isFinite(n) || isNaN(n)) return 0;
+        const abs = Math.abs(n);
+        if (abs < 0.01) return 0.01;
+        if (abs > 100000) return Math.sign(n) * 100000;
+        return n;
+      }
 
-    const answer = convert(value, fromU, toU);
+      // ==================== تولید سوال ====================
+      function generateQuestion() {
+        const MAX_ATTEMPTS = 15;
+        
+        for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
+          const diff = getDifficultyLevel();
+          const allowedCats = getAllowedCategories(diff);
+          
+          const recentCats = usedCategoryHistory.slice(-3);
+          let catKey;
+          let catAttempts = 0;
+          do {
+            catKey = getRandomItem(allowedCats);
+            catAttempts++;
+          } while (recentCats.includes(catKey) && catAttempts < 10);
+          
+          if (!catKey) continue;
 
-    const catName = ({
-      length:"طول",
-      area:"مساحت",
-      volume:"حجم",
-      liquid:"حجم مایعات",
-      mass:"جرم"
-    })[cat];
+          const catData = categories[catKey];
+          if (!catData || !catData.units || catData.units.length < 2) continue;
+          
+          const unitList = catData.units;
+          const scaleRange = getScaleRange(diff);
+          const from = getRandomItem(unitList);
+          if (!from) continue;
+          
+          const fromDef = unitDefinitions[from];
+          if (!fromDef) continue;
 
-    // Build 4 choices with plausible distractors
-    const choices = new Set();
-    choices.add(fmt(answer));
+          const candidates = unitList.filter(u => {
+            if (u === from) return false;
+            const toDef = unitDefinitions[u];
+            if (!toDef) return false;
+            const scaleDiff = Math.abs(fromDef.scale - toDef.scale);
+            return scaleDiff >= scaleRange.min && scaleDiff <= scaleRange.max;
+          });
 
-    // distractors: wrong exponent direction, off by one step, misplaced decimal, etc.
-    const distractorFns = [
-      () => answer * 10,
-      () => answer / 10,
-      () => answer * 100,
-      () => answer / 100,
-      () => answer * 1000,
-      () => answer / 1000,
-      () => -answer, // should be filtered
-      () => answer + (Math.abs(answer)*0.1 + 1),
-      () => Math.max(0, answer - (Math.abs(answer)*0.12 + 1)),
-    ];
+          let to;
+          if (candidates.length > 0) {
+            const sorted = [...candidates].sort((a, b) => {
+              const diffA = Math.abs(Math.abs(fromDef.scale - unitDefinitions[a].scale) - scaleRange.ideal);
+              const diffB = Math.abs(Math.abs(fromDef.scale - unitDefinitions[b].scale) - scaleRange.ideal);
+              return diffA - diffB;
+            });
+            const topN = Math.min(3, sorted.length);
+            to = getRandomItem(sorted.slice(0, topN));
+          } else {
+            const others = unitList.filter(u => u !== from);
+            to = getRandomItem(others);
+          }
+          
+          if (!to) continue;
 
-    // also, use "swap" mistake (using reverse conversion)
-    const reverse = convert(value, toU, fromU);
-    distractorFns.push(() => reverse);
+          const pairKey = `${from}->${to}`;
+          const recentPairs = usedUnitPairHistory.slice(-5);
+          if (recentPairs.includes(pairKey) && usedUnitPairHistory.length > 3 && attempt < MAX_ATTEMPTS - 1) {
+            continue;
+          }
 
-    while (choices.size < 4){
-      let d = choice(distractorFns)();
-      if (!isFinite(d)) continue;
-      if (d < 0) continue;
+          const toDef = unitDefinitions[to];
+          const scaleDiff = Math.abs(fromDef.scale - toDef.scale);
 
-      // keep reasonable magnitude to avoid giveaway
-      const ratio = answer === 0 ? 1 : Math.abs(d/answer);
-      if (ratio > 1e6 || ratio < 1e-6) continue;
+          let value;
+          if (fromDef.scale >= toDef.scale) {
+            if (scaleDiff <= 1) value = Math.floor(Math.random() * 50) + 1;
+            else if (scaleDiff <= 3) value = Math.floor(Math.random() * 200) + 1;
+            else value = Math.floor(Math.random() * 1000) + 1;
+          } else {
+            if (scaleDiff <= 1) value = Math.floor(Math.random() * 100) + 10;
+            else if (scaleDiff <= 3) value = Math.floor(Math.random() * 500) + 50;
+            else value = Math.floor(Math.random() * 5000) + 100;
+          }
 
-      // rounding
-      const s = fmt(d);
-      if (s === fmt(answer)) continue;
-      choices.add(s);
-    }
+          const correctAnswer = convertUnit(value, from, to);
+          if (correctAnswer === null || isNaN(correctAnswer) || !isFinite(correctAnswer)) continue;
 
-    const arr = Array.from(choices);
-    // shuffle
-    for (let i = arr.length - 1; i > 0; i--){
-      const j = Math.floor(Math.random() * (i + 1));
-      [arr[i], arr[j]] = [arr[j], arr[i]];
-    }
+          const formula = getConversionFormula(value, from, to);
+          if (!formula) continue;
 
-    return {
-      cfg, cat, catName, fromU, toU,
-      value, answer,
-      choices: arr,
-      signature: sig
-    };
-  }
+          usedCategoryHistory.push(catKey);
+          if (usedCategoryHistory.length > 10) usedCategoryHistory.shift();
+          usedUnitPairHistory.push(pairKey);
+          if (usedUnitPairHistory.length > 15) usedUnitPairHistory.shift();
 
-  function renderQuestion(q){
-    current = q;
-    locked = false;
+          return {
+            value, fromUnit: from, toUnit: to, correctAnswer, formula,
+            category: catKey, categoryIcon: catData.icon, categoryName: catData.name,
+            difficulty: diff, scaleDiff
+          };
+        }
 
-    ui.modeBadge.textContent = `درحال مسابقه — ${q.catName}`;
-    ui.qIndex.textContent = qNum;
+        // Fallback امن
+        const fallbackUnits = categories['length'].units;
+        const fFrom = fallbackUnits[0];
+        const fTo = fallbackUnits.find(u => u !== fFrom) || fallbackUnits[3];
+        const fValue = 1000;
+        return {
+          value: fValue,
+          fromUnit: fFrom,
+          toUnit: fTo,
+          correctAnswer: convertUnit(fValue, fFrom, fTo),
+          formula: getConversionFormula(fValue, fFrom, fTo),
+          category: 'length',
+          categoryIcon: '📏',
+          categoryName: 'طول',
+          difficulty: 1,
+          scaleDiff: 3
+        };
+      }
 
-    ui.question.innerHTML =
-      `تبدیل کن: <span class="num">${fmt(q.value)}</span> ${q.fromU.name}  =  ?  ${q.toU.name}`;
+      // ==================== تولید گزینه‌های امن با محدوده آموزشی ====================
+      function generateOptions(question) {
+        const correct = question.correctAnswer;
+        if (!isFinite(correct) || isNaN(correct)) {
+          return [correct, correct + 1, correct + 2, correct + 3].filter(v => isFinite(v) && !isNaN(v));
+        }
 
-    ui.answers.innerHTML = "";
-    q.choices.forEach((c) => {
-      const btn = document.createElement("button");
-      btn.className = "choice";
-      btn.innerHTML = `${c} <span style="color:var(--muted); font-weight:700">(${q.toU.key})</span>`;
-      btn.addEventListener("click", () => pickAnswer(btn, c));
-      ui.answers.appendChild(btn);
-    });
+        const options = new Set();
+        options.add(parseFloat(correct.toFixed(DISPLAY_PRECISION)));
 
-    ui.nextBtn.disabled = true;
-    startTimer(q.cfg.timeMs);
-  }
+        const strategies = [
+          () => correct * (0.7 + Math.random() * 0.6),
+          () => correct * (1.2 + Math.random() * 0.5),
+          () => correct + (Math.random() - 0.5) * Math.abs(correct) * 0.4,
+          () => correct * Math.pow(10, Math.floor(Math.random() * 2) - 1),
+          () => correct * (0.1 + Math.random() * 0.3),
+          () => correct * (1.5 + Math.random() * 1.5),
+        ];
 
-  function revealCorrect(chosenBtn){
-    const correctStr = fmt(current.answer);
-    [...ui.answers.children].forEach(btn => {
-      const isCorrect = btn.textContent.includes(correctStr);
-      if (isCorrect) btn.classList.add("correct");
-    });
-    if (chosenBtn){
-      const chosenText = chosenBtn.textContent;
-      if (!chosenText.includes(correctStr)) chosenBtn.classList.add("wrong");
-    }
-  }
+        const MAX_STRATEGY_ATTEMPTS = 30;
+        for (let i = 0; i < MAX_STRATEGY_ATTEMPTS && options.size < 4; i++) {
+          const strategy = strategies[Math.floor(Math.random() * strategies.length)];
+          let fake = strategy();
+          
+          fake = Math.min(1e9, Math.max(0.0001, fake));
+          fake = clampEducationalNumber(fake);
+          fake = parseFloat(fake.toFixed(2));
+          
+          if (!isFinite(fake) || isNaN(fake) || fake <= 0) continue;
+          if (options.has(fake)) continue;
+          
+          if (Math.abs(fake - correct) > EPSILON) {
+            options.add(fake);
+          }
+        }
 
-  function pickAnswer(btn, valStr){
-    if (!running || locked) return;
-    locked = true;
-    stopTimer();
+        // Fallback
+        if (options.size < 4) {
+          const fallbacks = correct === 0
+            ? [1, 10, 100, 0.1, 0.01, 0.001]
+            : [correct * 0.5, correct * 2, correct * 0.1, correct * 10, correct * 0.75, correct * 1.5];
+          for (const fb of fallbacks) {
+            if (options.size >= 4) break;
+            let val = clampEducationalNumber(fb);
+            val = parseFloat(val.toFixed(2));
+            if (!isFinite(val) || val <= 0 || options.has(val)) continue;
+            if (Math.abs(val - correct) > EPSILON) {
+              options.add(val);
+            }
+          }
+        }
 
-    const correctStr = fmt(current.answer);
-    const ok = (valStr === correctStr);
+        return shuffleArray([...options]).slice(0, 4);
+      }
 
-    const elapsed = current.cfg.timeMs - timeLeftMs;
-    const sec = elapsed / 1000;
+      // ==================== مقایسه با دقت بالا ====================
+      function isAnswerCorrect(userAnswer, correctAnswer) {
+        if (!isFinite(userAnswer) || !isFinite(correctAnswer)) return false;
+        return Math.abs(userAnswer - correctAnswer) < EPSILON;
+      }
 
-    if (ok){
-      correct++;
-      combo++;
-      maxCombo = Math.max(maxCombo, combo);
+      // ==================== فرمت‌دهی امن اعداد ====================
+      function formatNumber(num) {
+        if (!isFinite(num) || isNaN(num)) return '0';
+        try {
+          return num.toLocaleString('fa-IR', { maximumFractionDigits: DISPLAY_PRECISION });
+        } catch (e) {
+          return num.toString();
+        }
+      }
 
-      const speedBonus = Math.round(current.cfg.basePts * (timeLeftMs / current.cfg.timeMs));
-      const comboMult = 1 + Math.min(0.8, combo * 0.06); // up to x1.8
-      const gained = Math.round((current.cfg.basePts + speedBonus) * comboMult);
+      // ==================== DOM Elements ====================
+      const startScreen = document.getElementById('startScreen');
+      const playArea = document.getElementById('playArea');
+      const endScreen = document.getElementById('endScreen');
+      const scoreDisplay = document.getElementById('scoreDisplay');
+      const timerDisplay = document.getElementById('timerDisplay');
+      const timerBox = document.getElementById('timerBox');
+      const roundDisplay = document.getElementById('roundDisplay');
+      const levelDisplay = document.getElementById('levelDisplay');
+      const questionValueEl = document.getElementById('questionValue');
+      const fromUnitEl = document.getElementById('fromUnit');
+      const toUnitEl = document.getElementById('toUnit');
+      const categoryBadge = document.getElementById('categoryBadge');
+      const difficultyIndicator = document.getElementById('difficultyIndicator');
+      const answerInput = document.getElementById('answerInput');
+      const optionsContainer = document.getElementById('optionsContainer');
+      const feedbackMessage = document.getElementById('feedbackMessage');
+      const formulaDisplay = document.getElementById('formulaDisplay');
+      const streakMessage = document.getElementById('streakMessage');
+      const finalScoreSpan = document.getElementById('finalScoreSpan');
+      const totalQuestionsSpan = document.getElementById('totalQuestions');
+      const bestStreakSpan = document.getElementById('bestStreakSpan');
+      const finalLevelSpan = document.getElementById('finalLevelSpan');
+      const medalsEarned = document.getElementById('medalsEarned');
+      const newRecordText = document.getElementById('newRecordText');
+      const highScoreDisplay = document.getElementById('highScoreDisplay');
+      const totalMedalsDisplay = document.getElementById('totalMedalsDisplay');
+      const timeSelect = document.getElementById('timeSelect');
+      const modeSelect = document.getElementById('modeSelect');
+      const medalModal = document.getElementById('medalModal');
+      const medalMessage = document.getElementById('medalMessage');
+      const powerupBar = document.getElementById('powerupBar');
+      const tutorialModal = document.getElementById('tutorialModal');
+      const helpButton = document.getElementById('helpButton');
 
-      score += gained;
-      fastest = (fastest===null) ? sec : Math.min(fastest, sec);
+      // ==================== بارگذاری امن داده‌ها ====================
+      function loadSavedData() {
+        try {
+          highScore = parseInt(localStorage.getItem('unitWarHighScore_v36')) || 0;
+          if (!isFinite(highScore)) highScore = 0;
+        } catch (e) {
+          console.warn('Failed to load high score:', e);
+          highScore = 0;
+        }
 
-      btn.classList.add("correct");
-      logLine(`✅ درست! +${gained} امتیاز | زمان پاسخ: ${sec.toFixed(2)} ثانیه | کمبو: ${combo}`);
+        try {
+          const raw = localStorage.getItem('unitWarMedals_v36');
+          allMedals = raw ? JSON.parse(raw) : [];
+          if (!Array.isArray(allMedals)) {
+            console.warn('Corrupted medals data, resetting');
+            allMedals = [];
+          }
+        } catch (e) {
+          console.warn('Failed to load medals:', e);
+          allMedals = [];
+        }
+      }
 
-    } else {
-      wrong++;
-      combo = 0;
+      function saveData() {
+        try {
+          localStorage.setItem('unitWarHighScore_v36', highScore.toString());
+          localStorage.setItem('unitWarMedals_v36', JSON.stringify(allMedals));
+        } catch (e) {
+          console.warn('Failed to save data:', e);
+        }
+      }
+      loadSavedData();
+      if (highScoreDisplay) highScoreDisplay.textContent = highScore;
+      if (totalMedalsDisplay) totalMedalsDisplay.textContent = allMedals.length;
 
-      const lost = current.cfg.penalty;
-      score = Math.max(0, score - lost);
+      // ==================== 🟢 نمایش راهنما (قابل فراخوانی در هر لحظه) ====================
+      function showTutorialModal() {
+        if (!tutorialModal) return;
+        tutorialModal.classList.add('active');
+      }
 
-      btn.classList.add("wrong");
-      logLine(`❌ غلط! -${lost} امتیاز | کمبو صفر شد`);
-      revealCorrect(btn);
-    }
+      function hideTutorialModal() {
+        if (!tutorialModal) return;
+        tutorialModal.classList.remove('active');
+      }
 
-    ui.score.textContent = score;
-    ui.combo.textContent = combo;
+      // ==================== Event Listeners با Event Delegation ====================
+      document.getElementById('startGameBtn')?.addEventListener('click', startGame);
+      document.getElementById('restartFromPlay')?.addEventListener('click', restartGame);
+      document.getElementById('playAgainEnd')?.addEventListener('click', restartGame);
+      document.getElementById('submitAnswer')?.addEventListener('click', handleSubmit);
+      document.getElementById('closeMedalModal')?.addEventListener('click', () => medalModal.classList.remove('active'));
+      document.getElementById('closeTutorialModal')?.addEventListener('click', hideTutorialModal);
+      
+      // 🟢 دکمه راهنما - همیشه در دسترس
+      helpButton?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        showTutorialModal();
+      });
 
-    ui.stCorrect.textContent = correct;
-    ui.stWrong.textContent = wrong;
-    ui.stMaxCombo.textContent = maxCombo;
-    ui.stFast.textContent = fastest===null ? "—" : `${fastest.toFixed(2)} ثانیه`;
+      // بستن مودال راهنما با کلیک روی پس‌زمینه
+      tutorialModal?.addEventListener('click', (e) => {
+        if (e.target === tutorialModal) {
+          hideTutorialModal();
+        }
+      });
 
-    ui.nextBtn.disabled = false;
+      powerupBar?.addEventListener('click', (e) => {
+        const powerupIcon = e.target.closest('.powerup-icon[data-powerup]');
+        if (powerupIcon) {
+          const type = powerupIcon.dataset.powerup;
+          if (type && !answerLock && gameActive) {
+            usePowerup(type);
+          }
+        }
+      });
 
-    if (qNum >= TOTAL_QUESTIONS){
-      finishGame();
-    }
-  }
+      answerInput?.addEventListener('keypress', e => { if (e.key === 'Enter') handleSubmit(); });
+      answerInput?.addEventListener('input', () => {
+        if (selectedOptionBtn !== null && !answerLock) {
+          clearOptionSelection();
+          answerInput.disabled = false;
+        }
+      });
 
-  function nextQuestion(){
-    if (!running) return;
-    if (qNum >= TOTAL_QUESTIONS){
-      finishGame();
-      return;
-    }
-    qNum++;
-    const q = buildQuestion();
-    renderQuestion(q);
-  }
+      // ==================== توابع نمایش ====================
+      function displayQuestion(q) {
+        if (!q) return;
+        answerLock = false;
+        questionValueEl.textContent = q.value;
+        fromUnitEl.textContent = q.fromUnit;
+        toUnitEl.textContent = q.toUnit;
+        categoryBadge.textContent = `${q.categoryIcon} ${q.categoryName}`;
+        difficultyIndicator.textContent = getDifficultyStars(q.difficulty);
+        answerInput.value = '';
+        answerInput.disabled = false;
+        feedbackMessage.textContent = '';
+        feedbackMessage.className = 'feedback';
+        formulaDisplay.style.display = 'none';
+        clearOptionSelection();
+        renderOptions(q);
+        setTimeout(() => {
+          if (!answerInput.disabled && gameActive) answerInput?.focus();
+        }, 100);
+      }
 
-  function startGame(){
-    resetStats();
-    running = true;
+      function renderOptions(q) {
+        const optionValues = generateOptions(q);
+        optionsContainer.innerHTML = '';
+        const fragment = document.createDocumentFragment();
+        optionValues.forEach(val => {
+          if (!isFinite(val) || isNaN(val)) return;
+          const btn = document.createElement('button');
+          btn.className = 'option-btn';
+          btn.dataset.value = val;
+          btn.textContent = formatNumber(val);
+          btn.addEventListener('click', () => {
+            if (!answerLock && gameActive) handleOptionSelect(val, btn);
+          });
+          fragment.appendChild(btn);
+        });
+        optionsContainer.appendChild(fragment);
+      }
 
-    ui.startBtn.disabled = true;
-    ui.stopBtn.disabled = false;
-    ui.difficulty.disabled = true;
-    ui.playlist.disabled = true;
+      function clearOptionSelection() {
+        if (selectedOptionBtn) {
+          selectedOptionBtn.classList.remove('selected-option');
+          selectedOptionBtn = null;
+        }
+        optionsContainer.querySelectorAll('.option-btn.selected-option').forEach(b => {
+          b.classList.remove('selected-option');
+        });
+      }
 
-    ui.modeBadge.textContent = "شروع شد!";
-    logLine("🏁 مسابقه شروع شد. آماده‌ای؟");
-    nextQuestion();
-  }
+      function handleOptionSelect(val, btn) {
+        if (!gameActive || answerLock) return;
+        answerLock = true;
+        clearOptionSelection();
+        selectedOptionBtn = btn;
+        btn.classList.add('selected-option');
+        answerInput.value = val;
+        answerInput.disabled = true;
+        checkAnswer(val);
+      }
 
-  function finishGame(){
-    if (!running) return;
-    running = false;
-    stopTimer();
+      function handleSubmit() {
+        if (!gameActive || answerLock) return;
+        const inputVal = answerInput.value.trim();
+        if (inputVal === '') {
+          feedbackMessage.textContent = '⚠️ یک عدد وارد کن!';
+          return;
+        }
+        const userAnswer = parseFloat(inputVal);
+        if (isNaN(userAnswer) || !isFinite(userAnswer)) {
+          feedbackMessage.textContent = '❌ عدد معتبر نیست!';
+          return;
+        }
+        answerLock = true;
+        checkAnswer(userAnswer);
+      }
 
-    ui.modeBadge.textContent = "پایان مسابقه";
-    ui.startBtn.disabled = false;
-    ui.nextBtn.disabled = true;
-    ui.stopBtn.disabled = true;
-    ui.difficulty.disabled = false;
-    ui.playlist.disabled = false;
+      function checkAnswer(userAnswer) {
+        if (!answerLock) {
+          answerLock = true;
+        }
+        
+        if (!currentQuestion || !gameActive) {
+          answerLock = false;
+          return;
+        }
 
-    const best = loadBest();
-    if (score > best){
-      saveBest(score);
-      ui.best.textContent = score;
-      logLine(`🏆 رکورد جدید! امتیاز: ${score}`);
-    } else {
-      ui.best.textContent = best;
-      logLine(`📌 پایان. امتیاز نهایی: ${score} | رکورد: ${best}`);
-    }
-  }
+        const correct = currentQuestion.correctAnswer;
+        const ok = isAnswerCorrect(userAnswer, correct);
 
-  ui.startBtn.addEventListener("click", startGame);
-  ui.stopBtn.addEventListener("click", finishGame);
-  ui.nextBtn.addEventListener("click", () => {
-    if (!running) return;
-    nextQuestion();
-  });
+        totalAnswered++;
 
-  resetStats();
-})();
-</script>
+        if (ok) {
+          streak++;
+          if (streak > bestStreak) bestStreak = streak;
+          questionsInLevel++;
+
+          let earned = 10 + Math.min(streak, 10) * 2 + Math.floor(timeLeft / 15);
+          if (doubleActive) { earned *= 2; doubleActive = false; updatePowerupIcons(); }
+          score += earned;
+
+          feedbackMessage.textContent = `✅ عالی! +${earned} امتیاز`;
+          feedbackMessage.className = 'feedback correct-feedback';
+          streakMessage.textContent = streak > 1 ? `🔥 استریک ${streak}` : '';
+          formulaDisplay.style.display = 'inline-block';
+          formulaDisplay.textContent = `📐 ${currentQuestion.formula}`;
+          sfxCorrect();
+          if (streak >= 3) sfxCombo(streak);
+          if (streak === 5 || streak === 10) showComboEffect(`🔥 استریک ${streak}!`);
+
+          if (questionsInLevel >= QUESTIONS_PER_LEVEL) {
+            level++;
+            questionsInLevel = 0;
+            showComboEffect(`⭐ سطح ${level}!`);
+            const pk = Object.keys(powerups);
+            powerups[pk[Math.floor(Math.random() * pk.length)]]++;
+            updatePowerupIcons();
+          }
+          checkMedals();
+          if (gameMode === 'speed') { timeLeft = 10; updateUI(); }
+        } else {
+          if (gameMode === 'survival') { 
+            answerLock = false;
+            endGame(); 
+            return; 
+          }
+          streak = 0;
+          feedbackMessage.textContent = `❌ اشتباه! پاسخ: ${formatNumber(correct)}`;
+          feedbackMessage.className = 'feedback wrong-feedback';
+          streakMessage.textContent = '';
+          formulaDisplay.style.display = 'inline-block';
+          formulaDisplay.textContent = `📐 ${currentQuestion.formula}`;
+          sfxWrong();
+        }
+
+        questionHistory.push(currentQuestion);
+        if (questionHistory.length > 20) questionHistory.shift();
+
+        updateUI();
+        currentQuestion = generateQuestion();
+        displayQuestion(currentQuestion);
+      }
+
+      function checkMedals() {
+        const checks = [
+          { id: 'streak5', c: bestStreak >= 5, t: '🔥 استریک ۵' },
+          { id: 'streak10', c: bestStreak >= 10, t: '🔥🔥 استریک ۱۰' },
+          { id: 'score100', c: score >= 100, t: '💯 امتیاز ۱۰۰' },
+          { id: 'score300', c: score >= 300, t: '🏆 امتیاز ۳۰۰' },
+          { id: 'score500', c: score >= 500, t: '👑 امتیاز ۵۰۰' },
+          { id: 'level5', c: level >= 5, t: '⭐ سطح ۵' },
+          { id: 'marathon', c: totalAnswered >= 30, t: '🏃 ماراتن ۳۰' }
+        ];
+        checks.forEach(m => {
+          if (m.c && !allMedals.includes(m.id) && !newMedalsThisRound.includes(m.id)) {
+            allMedals.push(m.id);
+            newMedalsThisRound.push(m.id);
+            medalMessage.textContent = m.t;
+            medalModal.classList.add('active');
+            sfxMedal();
+          }
+        });
+        saveData();
+      }
+
+      function usePowerup(type) {
+        if (!gameActive || powerups[type] <= 0) return;
+        powerups[type]--;
+        updatePowerupIcons();
+
+        switch (type) {
+          case 'time':
+            timeLeft += 10;
+            updateUI();
+            break;
+          case 'freeze':
+            frozen = true;
+            freezeEndTime = Date.now() + 5000;
+            break;
+          case 'hint': {
+            selectedOptionBtn = null;
+            const allBtns = optionsContainer.querySelectorAll('.option-btn:not(.disabled-option):not(.selected-option)');
+            const correct = currentQuestion.correctAnswer;
+            let removed = 0;
+            for (const b of allBtns) {
+              if (removed >= 2) break;
+              const bv = parseFloat(b.dataset.value);
+              if (isNaN(bv) || !isFinite(bv)) continue;
+              if (!isAnswerCorrect(bv, correct)) {
+                b.classList.add('disabled-option');
+                removed++;
+              }
+            }
+            break;
+          }
+          case 'double':
+            doubleActive = true;
+            break;
+        }
+      }
+
+      function updatePowerupIcons() {
+        powerupBar?.querySelectorAll('.powerup-icon[data-powerup]').forEach(el => {
+          const type = el.dataset.powerup;
+          el.classList.toggle('used', powerups[type] <= 0);
+        });
+      }
+
+      function showComboEffect(text) {
+        const el = document.createElement('div');
+        el.className = 'combo-effect';
+        el.textContent = text;
+        el.addEventListener('animationend', () => {
+          if (el.parentNode) el.remove();
+        }, { once: true });
+        document.body.appendChild(el);
+      }
+
+      function updateUI() {
+        scoreDisplay.textContent = score;
+        timerDisplay.textContent = timeLeft;
+        roundDisplay.textContent = totalAnswered + 1;
+        levelDisplay.textContent = level;
+        timerBox.classList.toggle('danger', timeLeft <= 10);
+      }
+
+      // ==================== تایمر با freeze اصلاح‌شده ====================
+      let timerId = 0;
+
+      function resetTimer() {
+        if (timerId) {
+          clearInterval(timerId);
+          timerId = 0;
+        }
+        frozen = false;
+        freezeEndTime = 0;
+      }
+
+      function startTimer() {
+        resetTimer();
+        timerId = setInterval(() => {
+          if (!gameActive) return;
+          
+          if (frozen) {
+            if (Date.now() < freezeEndTime) {
+              return;
+            }
+            frozen = false;
+            freezeEndTime = 0;
+          }
+          
+          timeLeft--;
+          updateUI();
+          if (timeLeft <= 10 && timeLeft > 0) sfxTick();
+          if (timeLeft <= 0) endGame();
+        }, 1000);
+      }
+
+      function resetGameState() {
+        resetTimer();
+        score = 0;
+        timeLeft = parseInt(timeSelect?.value || 90);
+        streak = 0;
+        bestStreak = 0;
+        totalAnswered = 0;
+        questionHistory = [];
+        usedCategoryHistory = [];
+        usedUnitPairHistory = [];
+        level = 1;
+        questionsInLevel = 0;
+        powerups = { time: 1, freeze: 1, hint: 1, double: 1 };
+        doubleActive = false;
+        frozen = false;
+        freezeEndTime = 0;
+        gameActive = false;
+        currentQuestion = null;
+        newMedalsThisRound = [];
+        selectedOptionBtn = null;
+        answerLock = false;
+        gameMode = modeSelect?.value || 'classic';
+      }
+
+      async function startGame() {
+        // 🟢 راهنما فقط بار اول - اما دکمه ❓ همیشه هست
+        try {
+          if (!localStorage.getItem(HAS_SEEN_TUTORIAL_KEY)) {
+            showTutorialModal();
+            localStorage.setItem(HAS_SEEN_TUTORIAL_KEY, '1');
+          }
+        } catch (e) {
+          console.warn('Tutorial check failed', e);
+        }
+
+        resetGameState();
+        initAudio();
+        gameActive = true;
+        updateUI();
+        timerBox.classList.remove('danger');
+        updatePowerupIcons();
+        startScreen.style.display = 'none';
+        playArea.style.display = 'block';
+        endScreen.style.display = 'none';
+        currentQuestion = generateQuestion();
+        displayQuestion(currentQuestion);
+        startTimer();
+        sfxStart();
+        setTimeout(() => answerInput?.focus(), 200);
+        if (highScoreDisplay) highScoreDisplay.textContent = highScore;
+        if (totalMedalsDisplay) totalMedalsDisplay.textContent = allMedals.length;
+      }
+
+      function endGame() {
+        gameActive = false;
+        answerLock = false;
+        resetTimer();
+        sfxGameOver();
+        playArea.style.display = 'none';
+        endScreen.style.display = 'block';
+        finalScoreSpan.textContent = score;
+        totalQuestionsSpan.textContent = totalAnswered;
+        bestStreakSpan.textContent = bestStreak;
+        finalLevelSpan.textContent = level;
+        if (newMedalsThisRound.length > 0) {
+          const texts = newMedalsThisRound.map(id => {
+            const found = [
+              { id: 'streak5', t: '🔥 استریک ۵' }, { id: 'streak10', t: '🔥🔥 استریک ۱۰' },
+              { id: 'score100', t: '💯 امتیاز ۱۰۰' }, { id: 'score300', t: '🏆 امتیاز ۳۰۰' },
+              { id: 'score500', t: '👑 امتیاز ۵۰۰' }, { id: 'level5', t: '⭐ سطح ۵' },
+              { id: 'marathon', t: '🏃 ماراتن ۳۰' }
+            ].find(m => m.id === id);
+            return found ? found.t : id;
+          });
+          medalsEarned.textContent = texts.join(' | ');
+        } else {
+          medalsEarned.textContent = 'این دور مدال جدیدی نگرفتی!';
+        }
+        let isNew = false;
+        if (score > highScore) { highScore = score; saveData(); isNew = true; }
+        newRecordText.textContent = isNew ? '🏆 رکورد جدید! آفرین!' : '';
+        if (highScoreDisplay) highScoreDisplay.textContent = highScore;
+        if (totalMedalsDisplay) totalMedalsDisplay.textContent = allMedals.length;
+      }
+
+      function restartGame() {
+        resetTimer();
+        startGame();
+      }
+
+      function cleanup() {
+        resetTimer();
+        gameActive = false;
+        answerLock = false;
+      }
+
+      window.addEventListener('beforeunload', cleanup);
+    })();
+  </script>
 </body>
 </html>
