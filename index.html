@@ -3,12 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=1.5">
-  <title>نبرد واحدها 3.5 | نسخه Production-Grade ⚔️</title>
+  <title>نبرد واحدها 3.9 | نسخه آموزشی نهایی ⚔️</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      font-family: 'Segoe UI', 'Tahoma', sans-serif;
+      font-family: 'Vazirmatn', sans-serif;
+      line-height: 1.6;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
       background: radial-gradient(circle at 20% 20%, #1a3327 0%, #0d1f14 100%);
       min-height: 100vh;
       display: flex;
@@ -18,6 +25,12 @@
       direction: rtl;
       position: relative;
       overflow-x: hidden;
+      transition: background 0.8s ease;
+    }
+
+    /* ✅ Focus Mode - کاهش شلوغی بصری */
+    body.focus-mode {
+      background: radial-gradient(circle at 20% 20%, #14261d 0%, #0a180f 100%);
     }
 
     .particles-container {
@@ -28,6 +41,11 @@
       height: 100%;
       pointer-events: none;
       z-index: 0;
+      transition: opacity 0.6s ease;
+    }
+
+    body.focus-mode .particles-container {
+      opacity: 0.3;
     }
 
     .particle {
@@ -36,6 +54,7 @@
       animation: floatUp var(--duration) infinite ease-in;
       animation-delay: var(--delay);
       opacity: 0;
+      will-change: transform, opacity;
     }
 
     @keyframes floatUp {
@@ -56,7 +75,12 @@
       position: relative;
       z-index: 2;
       color: #f0e6c5;
-      transition: 0.3s;
+      transition: all 0.6s ease;
+    }
+
+    body.focus-mode .game-container {
+      border-color: #f5c542;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.9), 0 0 50px rgba(230,180,34,0.5);
     }
 
     .game-container.shake {
@@ -81,6 +105,15 @@
       box-shadow: 0 6px 0 #0f130c;
       flex-wrap: wrap;
       gap: 8px;
+      transition: all 0.5s ease;
+    }
+
+    /* ✅ کاهش opacity در Focus Mode */
+    body.focus-mode .header {
+      opacity: 0.25;
+      transform: scale(0.96);
+      pointer-events: none;
+      filter: blur(1px);
     }
 
     .score-box, .timer-box, .round-box, .level-box {
@@ -91,9 +124,10 @@
       border-radius: 40px;
       padding: 6px 14px;
       border: 1px solid #dbb45c;
-      font-weight: bold;
+      font-weight: 700;
       font-size: 1rem;
       color: #ffd966;
+      font-variant-numeric: tabular-nums;
     }
 
     .timer-box { color: #ffb347; background: #1e1a0f; transition: 0.3s; }
@@ -112,6 +146,17 @@
       margin: 15px 0;
       text-align: center;
       position: relative;
+      transition: all 0.5s ease;
+    }
+
+    /* ✅ برجسته‌سازی سوال در Focus Mode */
+    body.focus-mode .challenge-area {
+      transform: scale(1.02);
+      border-color: #f5c542;
+      border-width: 3px;
+      border-style: solid;
+      background: radial-gradient(circle at center, #2d4a2d, #1a2a1a);
+      box-shadow: 0 0 40px rgba(230,180,34,0.4);
     }
 
     .category-badge {
@@ -123,7 +168,8 @@
       padding: 4px 12px;
       border-radius: 20px;
       font-size: 0.85rem;
-      font-weight: bold;
+      font-weight: 700;
+      transition: all 0.5s ease;
     }
 
     .difficulty-indicator {
@@ -132,11 +178,13 @@
       right: 15px;
       color: #f5a442;
       font-size: 0.9rem;
+      font-weight: 600;
     }
 
     .question-text {
-      font-size: 2.2rem;
-      font-weight: 800;
+      font-size: 2.4rem;
+      font-weight: 900;
+      letter-spacing: 1px;
       color: #f7eac4;
       text-shadow: 0 4px 0 #3a4a2a;
       margin: 5px 0 15px;
@@ -144,20 +192,40 @@
       display: inline-block;
       padding: 8px 30px;
       border-radius: 50px;
+      font-variant-numeric: tabular-nums;
+      transition: all 0.5s ease;
+    }
+
+    /* ✅ سوال درشت‌تر در Focus Mode */
+    body.focus-mode .question-text {
+      font-size: 2.8rem;
+      box-shadow: 0 0 30px rgba(230,180,34,0.5);
+      color: #fff;
+      text-shadow: 0 4px 0 #2a3a1a;
     }
 
     .unit-label {
       font-size: 1.4rem;
+      font-weight: 700;
       background: #b4913c;
       color: #0b140b;
       padding: 4px 18px;
       border-radius: 30px;
       display: inline-block;
       margin: 0 5px;
-      font-weight: bold;
+      transition: all 0.5s ease;
     }
 
-    .arrow-icon { font-size: 2rem; margin: 0 8px; }
+    body.focus-mode .unit-label {
+      font-size: 1.6rem;
+      background: #d4a94c;
+    }
+
+    .arrow-icon { font-size: 2rem; margin: 0 8px; transition: all 0.5s ease; }
+
+    body.focus-mode .arrow-icon {
+      font-size: 2.5rem;
+    }
 
     .input-group {
       display: flex;
@@ -166,6 +234,11 @@
       justify-content: center;
       gap: 10px;
       margin-top: 15px;
+      transition: all 0.5s ease;
+    }
+
+    body.focus-mode .input-group {
+      margin-top: 20px;
     }
 
     .answer-input {
@@ -177,10 +250,19 @@
       border: 3px solid #caa65a;
       border-radius: 30px;
       outline: none;
-      font-weight: bold;
+      font-weight: 800;
       color: #1f3b1f;
       box-shadow: 0 0 15px rgba(230,180,34,0.5);
       transition: 0.2s;
+      font-family: 'Vazirmatn', sans-serif;
+      font-variant-numeric: tabular-nums;
+    }
+
+    body.focus-mode .answer-input {
+      width: 160px;
+      font-size: 1.8rem;
+      border-color: #f5c542;
+      box-shadow: 0 0 25px rgba(230,180,34,0.7);
     }
 
     .answer-input:disabled {
@@ -193,13 +275,15 @@
       background: linear-gradient(180deg, #f3c45a 0%, #b57c1a 100%);
       border: none;
       color: #1e2b0c;
-      font-weight: bold;
+      font-weight: 800;
+      letter-spacing: 0.5px;
       font-size: 1.2rem;
       padding: 12px 22px;
       border-radius: 40px;
       cursor: pointer;
       border-bottom: 5px solid #6b4a12;
       transition: 0.1s;
+      font-family: 'Vazirmatn', sans-serif;
     }
 
     .submit-btn:active { border-bottom-width: 2px; transform: translateY(3px); }
@@ -209,6 +293,11 @@
       grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
       gap: 10px;
       margin: 15px 0;
+      transition: all 0.5s ease;
+    }
+
+    body.focus-mode .options-grid {
+      gap: 15px;
     }
 
     .option-btn {
@@ -216,12 +305,14 @@
       border: 2px solid #8f7a4b;
       border-radius: 25px;
       padding: 10px 5px;
-      font-weight: bold;
+      font-weight: 600;
       font-size: 1rem;
       color: #f3deaa;
       cursor: pointer;
       transition: all 0.15s;
       word-break: break-all;
+      font-family: 'Vazirmatn', sans-serif;
+      font-variant-numeric: tabular-nums;
     }
 
     .option-btn:hover:not(.disabled-option):not(.selected-option) {
@@ -245,13 +336,25 @@
 
     .feedback {
       margin: 8px 0;
-      font-weight: bold;
+      font-weight: 700;
       min-height: 30px;
       font-size: 1.2rem;
       text-align: center;
+      transition: all 0.3s ease;
     }
-    .feedback.correct-feedback { color: #a5e65c; text-shadow: 0 0 10px #5f9e2c; }
+    .feedback.correct-feedback { 
+      color: #a5e65c; 
+      text-shadow: 0 0 10px #5f9e2c;
+      font-size: 1.4rem;
+      animation: feedbackPop 0.5s ease-out;
+    }
     .feedback.wrong-feedback { color: #ff7b6b; text-shadow: 0 0 10px #b32a1a; }
+
+    @keyframes feedbackPop {
+      0% { transform: scale(0.8); opacity: 0; }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); opacity: 1; }
+    }
 
     .formula-box {
       background: rgba(0,0,0,0.4);
@@ -262,6 +365,8 @@
       color: #ffd966;
       display: inline-block;
       direction: ltr;
+      font-weight: 500;
+      transition: all 0.3s ease;
     }
 
     .start-btn {
@@ -270,11 +375,13 @@
       font-size: 1.2rem;
       padding: 10px 24px;
       border-radius: 30px;
-      font-weight: bold;
+      font-weight: 800;
+      letter-spacing: 0.5px;
       color: #0a1f0a;
       cursor: pointer;
       border-bottom: 5px solid #7a5213;
       margin: 5px;
+      font-family: 'Vazirmatn', sans-serif;
     }
 
     .combo-effect {
@@ -283,11 +390,12 @@
       left: 50%;
       transform: translate(-50%, -50%);
       font-size: 2.5rem;
-      font-weight: bold;
+      font-weight: 900;
       color: #ffd966;
       pointer-events: none;
       z-index: 100;
       animation: comboPopup 1s ease-out forwards;
+      font-family: 'Vazirmatn', sans-serif;
     }
     @keyframes comboPopup {
       0% { opacity:1; transform: translate(-50%,-50%) scale(0.5); }
@@ -322,7 +430,17 @@
       justify-content: center;
       margin: 8px 0;
       flex-wrap: wrap;
+      transition: all 0.5s ease;
     }
+
+    /* ✅ کاهش powerup bar در Focus Mode */
+    body.focus-mode .powerup-bar {
+      opacity: 0.25;
+      transform: scale(0.96);
+      pointer-events: none;
+      filter: blur(1px);
+    }
+
     .powerup-icon {
       background: #2d3a2c;
       border: 2px solid #8f7a4b;
@@ -330,6 +448,7 @@
       padding: 6px 12px;
       cursor: pointer;
       font-size: 1.2rem;
+      font-weight: 600;
       transition: 0.2s;
       user-select: none;
     }
@@ -343,7 +462,124 @@
       filter: grayscale(100%);
       cursor: not-allowed;
     }
-    .powerup-label { font-size: 0.7rem; display: block; color: #ccb27c; }
+    .powerup-label { font-size: 0.7rem; display: block; color: #ccb27c; font-weight: 500; }
+
+    /* Tutorial Modal */
+    .tutorial-modal .modal-content {
+      background: linear-gradient(180deg, #2d3f2a 0%, #1a2616 100%);
+      border: 3px solid #e7c568;
+      max-width: 550px;
+      padding: 30px 25px;
+    }
+    
+    .tutorial-steps {
+      text-align: right;
+      margin: 15px 0;
+    }
+    
+    .tutorial-step {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 12px 0;
+      padding: 10px;
+      background: rgba(0,0,0,0.2);
+      border-radius: 15px;
+      border-right: 3px solid #e7c568;
+    }
+    
+    .tutorial-icon {
+      font-size: 2rem;
+      min-width: 50px;
+      text-align: center;
+    }
+    
+    .tutorial-text {
+      font-size: 0.95rem;
+      color: #f0e6c5;
+      font-weight: 500;
+    }
+    
+    .tutorial-text strong {
+      color: #f5c542;
+      display: block;
+      margin-bottom: 3px;
+      font-weight: 800;
+    }
+    
+    .tutorial-btn {
+      background: linear-gradient(180deg, #4CAF50, #2E7D32);
+      border: none;
+      font-size: 1.3rem;
+      padding: 12px 40px;
+      border-radius: 30px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      color: white;
+      cursor: pointer;
+      border-bottom: 5px solid #1B5E20;
+      margin-top: 15px;
+      transition: 0.2s;
+      font-family: 'Vazirmatn', sans-serif;
+    }
+    
+    .skip-tutorial {
+      background: none;
+      border: none;
+      color: #8f7a4b;
+      cursor: pointer;
+      margin-top: 10px;
+      font-size: 0.9rem;
+      text-decoration: underline;
+      padding: 5px;
+      font-weight: 500;
+    }
+
+    .medals-summary {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin: 10px 0;
+    }
+    
+    .medal-badge {
+      background: linear-gradient(180deg, #f3c45a, #b57c1a);
+      color: #0a1f0a;
+      padding: 6px 14px;
+      border-radius: 25px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      border: 2px solid #e7c568;
+      animation: medalPopIn 0.5s ease-out;
+    }
+    
+    @keyframes medalPopIn {
+      0% { transform: scale(0); opacity: 0; }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    /* ✅ انیمیشن پاداش */
+    .reward-animation {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 3rem;
+      font-weight: 900;
+      color: #ffd966;
+      pointer-events: none;
+      z-index: 100;
+      animation: rewardPopup 0.8s ease-out forwards;
+      text-shadow: 0 0 30px rgba(255,217,102,0.8);
+    }
+    
+    @keyframes rewardPopup {
+      0% { opacity:0; transform: translate(-50%, -50%) scale(0.3) rotate(-10deg); }
+      30% { opacity:1; transform: translate(-50%, -70%) scale(1.2) rotate(5deg); }
+      100% { opacity:0; transform: translate(-50%, -120%) scale(1) rotate(0); }
+    }
   </style>
 </head>
 <body>
@@ -353,26 +589,26 @@
     <div class="header">
       <div class="score-box">🏆 <span id="scoreDisplay">0</span></div>
       <div class="level-box">⭐ سطح <span id="levelDisplay">1</span></div>
-      <div class="round-box">🎯 <span id="roundDisplay">1</span></div>
+      <div class="round-box">🎯 <span id="roundDisplay">0</span></div>
       <div class="timer-box" id="timerBox">⏳ <span id="timerDisplay">90</span></div>
     </div>
 
     <div id="dynamicContent">
       <div id="startScreen" style="text-align:center; padding:20px;">
-        <h2 style="color:#e7c568;">⚔️ نبرد واحدها 3.5 ⚔️</h2>
-        <p style="margin:15px 0;">📏 طول | 📐 مساحت | 🧊 حجم | 💧 مایعات | 🏋️ جرم</p>
-        <p style="color:#ccb27c; font-size:0.85rem;">🔬 نسخه Production-Grade - آماده برای میلیون‌ها کاربر</p>
+        <h2 style="color:#e7c568; font-weight:900; font-size:2rem;">⚔️ نبرد واحدها 3.9 ⚔️</h2>
+        <p style="margin:15px 0; font-weight:600;">📏 طول | 📐 مساحت | 🧊 حجم | 💧 مایعات | 🏋️ جرم</p>
+        <p style="color:#ccb27c; font-size:0.85rem; font-weight:500;">🎮 نسخه آموزشی - یادگیری با لذت</p>
         <div style="margin:10px 0;">
-          <label>⏱️ زمان: </label>
-          <select id="timeSelect" style="padding:6px; border-radius:20px; background:#2d3a2c; color:#f0e6c5;">
+          <label style="font-weight:600;">⏱️ زمان: </label>
+          <select id="timeSelect" style="padding:6px; border-radius:20px; background:#2d3a2c; color:#f0e6c5; font-family:'Vazirmatn',sans-serif;">
             <option value="60">۶۰ ثانیه</option>
             <option value="90" selected>۹۰ ثانیه</option>
             <option value="120">۱۲۰ ثانیه</option>
           </select>
         </div>
         <div style="margin:10px 0;">
-          <label>🎮 حالت: </label>
-          <select id="modeSelect" style="padding:6px; border-radius:20px; background:#2d3a2c; color:#f0e6c5;">
+          <label style="font-weight:600;">🎮 حالت: </label>
+          <select id="modeSelect" style="padding:6px; border-radius:20px; background:#2d3a2c; color:#f0e6c5; font-family:'Vazirmatn',sans-serif;">
             <option value="classic">کلاسیک</option>
             <option value="survival">بقا (تا اولین اشتباه)</option>
             <option value="speed">سرعتی (۱۰ ثانیه هر سوال)</option>
@@ -380,8 +616,8 @@
         </div>
         <button class="start-btn" id="startGameBtn">🚀 شروع</button>
         <div style="margin-top:15px; font-size:0.9rem;">
-          🏅 رکورد: <span id="highScoreDisplay">0</span>
-          <br>🏅 مدال‌ها: <span id="totalMedalsDisplay">0</span>
+          🏅 رکورد: <span id="highScoreDisplay" style="font-weight:700;">0</span>
+          <br>🏅 مدال‌ها: <span id="totalMedalsDisplay" style="font-weight:700;">0</span>
         </div>
       </div>
 
@@ -395,7 +631,7 @@
         <div class="challenge-area">
           <span class="category-badge" id="categoryBadge">📏 طول</span>
           <span class="difficulty-indicator" id="difficultyIndicator">⭐</span>
-          <div style="color:#ccb27c;">تبدیل کن:</div>
+          <div style="color:#ccb27c; font-weight:500;">تبدیل کن:</div>
           <div class="question-text" id="questionValue">1250</div>
           <span class="unit-label" id="fromUnit">متر</span>
           <span class="arrow-icon">➡️</span>
@@ -410,27 +646,83 @@
         <div class="formula-box" id="formulaDisplay" style="display:none;"></div>
         <div style="display:flex; justify-content:space-between; align-items:center;">
           <button class="start-btn" id="restartFromPlay">🔄 شروع دوباره</button>
-          <span id="streakMessage" style="color:#f5b042;"></span>
+          <span id="streakMessage" style="color:#f5b042; font-weight:700;"></span>
         </div>
       </div>
 
       <div id="endScreen" style="display:none; text-align:center; padding:15px;">
-        <h2 style="color:#f3cd5e;">⏰ پایان!</h2>
-        <p>🎯 سوالات: <span id="totalQuestions">0</span></p>
-        <p>🏆 امتیاز: <span id="finalScoreSpan">0</span></p>
-        <p>🔥 بهترین استریک: <span id="bestStreakSpan">0</span></p>
-        <p>⭐ سطح: <span id="finalLevelSpan">1</span></p>
-        <p>🏅 مدال‌های جدید: <span id="medalsEarned"></span></p>
-        <p style="color:#f5c542;" id="newRecordText"></p>
+        <h2 style="color:#f3cd5e; font-weight:900;">⏰ پایان!</h2>
+        <p style="font-weight:600;">🎯 سوالات: <span id="totalQuestions">0</span></p>
+        <p style="font-weight:600;">🏆 امتیاز: <span id="finalScoreSpan">0</span></p>
+        <p style="font-weight:600;">🔥 بهترین استریک: <span id="bestStreakSpan">0</span></p>
+        <p style="font-weight:600;">⭐ سطح: <span id="finalLevelSpan">1</span></p>
+        <p style="font-weight:600;" id="medalsEarnedText">🏅 مدال‌های این دور:</p>
+        <div class="medals-summary" id="medalsSummary"></div>
+        <p style="color:#f5c542; font-weight:700;" id="newRecordText"></p>
         <button class="start-btn" id="playAgainEnd">🔄 دوباره</button>
       </div>
     </div>
   </div>
 
+  <!-- مودال راهنما -->
+  <div class="modal tutorial-modal" id="tutorialModal">
+    <div class="modal-content">
+      <h2 style="color:#f3cd5e; font-size:1.8rem; font-weight:900;">🎮 به نبرد واحدها خوش آمدید!</h2>
+      <p style="color:#ccb27c; margin-bottom:15px; font-weight:500;">قوانین بازی ساده است، فقط کافیست:</p>
+      
+      <div class="tutorial-steps">
+        <div class="tutorial-step">
+          <span class="tutorial-icon">🔢</span>
+          <div class="tutorial-text">
+            <strong>۱. تبدیل واحدها</strong>
+            عدد داده شده را به واحد جدید تبدیل کنید
+          </div>
+        </div>
+        
+        <div class="tutorial-step">
+          <span class="tutorial-icon">✍️</span>
+          <div class="tutorial-text">
+            <strong>۲. ثبت پاسخ</strong>
+            جواب را در کادر وارد کنید یا از گزینه‌ها انتخاب کنید
+          </div>
+        </div>
+        
+        <div class="tutorial-step">
+          <span class="tutorial-icon">⚡</span>
+          <div class="tutorial-text">
+            <strong>۳. استفاده از پاورآپ‌ها</strong>
+            ⏰ زمان اضافه | ❄️ فریز تایمر | 💡 حذف گزینه | ⭐ امتیاز مضاعف
+          </div>
+        </div>
+        
+        <div class="tutorial-step">
+          <span class="tutorial-icon">🏆</span>
+          <div class="tutorial-text">
+            <strong>۴. رسیدن به مدال‌ها</strong>
+            با استریک و امتیاز بالا، مدال‌های ویژه کسب کنید!
+          </div>
+        </div>
+      </div>
+      
+      <p style="color:#f0e6c5; font-size:0.9rem; margin:15px 0; font-weight:500;">
+        🎯 <strong style="font-weight:800;">هدف:</strong> تبدیل حداکثر تعداد واحدها قبل از اتمام زمان!
+      </p>
+      
+      <button class="tutorial-btn" id="startAfterTutorial">
+        ⚔️ آماده نبرد هستم!
+      </button>
+      <br>
+      <button class="skip-tutorial" id="skipTutorial">
+        رد کردن راهنما (برای همیشه)
+      </button>
+    </div>
+  </div>
+
+  <!-- مودال مدال -->
   <div class="modal" id="medalModal">
     <div class="modal-content">
-      <h2>🏅 مدال جدید!</h2>
-      <p id="medalMessage"></p>
+      <h2 style="font-weight:900;">🏅 مدال جدید!</h2>
+      <p id="medalMessage" style="font-weight:700; font-size:1.1rem;"></p>
       <button class="start-btn" id="closeMedalModal">باشه!</button>
     </div>
   </div>
@@ -438,22 +730,35 @@
   <script>
     (function() {
       // ==================== CONSTANTS ====================
-      const STORAGE_VERSION = 35; // نسخه برای migration
+      const STORAGE_VERSION = 39;
       const STORAGE_PREFIX = 'unitWar';
       const DATA_VERSION_KEY = `${STORAGE_PREFIX}_dataVersion`;
       const HIGH_SCORE_KEY = `${STORAGE_PREFIX}_highScore_v${STORAGE_VERSION}`;
       const MEDALS_KEY = `${STORAGE_PREFIX}_medals_v${STORAGE_VERSION}`;
+      const MEDAL_PROGRESS_KEY = `${STORAGE_PREFIX}_medalProgress_v${STORAGE_VERSION}`;
+      const HAS_SEEN_TUTORIAL_KEY = `${STORAGE_PREFIX}_hasSeenTutorial`;
       
       const EPSILON = 1e-6;
-      const DISPLAY_PRECISION = 4;
+      const DISPLAY_PRECISION = 2;
       const MAX_PARTICLES = 25;
       const QUESTIONS_PER_LEVEL = 5;
-      const AUDIO_POOL_SIZE = 4; // استخر صوتی برای مدیریت بهتر
+      const AUDIO_POOL_SIZE = 4;
+      const REWARD_PAUSE_DURATION = 800; // ✅ وقفه پاداش (میلی‌ثانیه)
       
-      // ==================== AUDIO ENGINE با مدیریت حافظه ====================
+      const MEDAL_DEFINITIONS = {
+        streak5: { id: 'streak5', text: '🔥 استریک ۵', icon: '🔥' },
+        streak10: { id: 'streak10', text: '🔥🔥 استریک ۱۰', icon: '🔥🔥' },
+        score100: { id: 'score100', text: '💯 امتیاز ۱۰۰', icon: '💯' },
+        score300: { id: 'score300', text: '🏆 امتیاز ۳۰۰', icon: '🏆' },
+        score500: { id: 'score500', text: '👑 امتیاز ۵۰۰', icon: '👑' },
+        level5: { id: 'level5', text: '⭐ سطح ۵', icon: '⭐' },
+        marathon: { id: 'marathon', text: '🏃 ماراتن ۲۰', icon: '🏃' }
+      };
+      
+      // ==================== AUDIO ENGINE ====================
       const AudioCtx = window.AudioContext || window.webkitAudioContext;
       let audioCtx;
-      let audioNodes = []; // 🟡 مورد ۴: tracking active audio nodes
+      let audioNodes = [];
       
       function initAudio() { 
         if (!audioCtx) audioCtx = new AudioCtx(); 
@@ -474,7 +779,6 @@
           osc.start(audioCtx.currentTime); 
           osc.stop(audioCtx.currentTime + duration);
           
-          // 🟡 مورد ۴: cleanup خودکار بعد از اتمام صدا
           osc.onended = () => {
             osc.disconnect();
             vol.disconnect();
@@ -483,17 +787,20 @@
           };
           audioNodes.push(osc);
           
-          // محدود کردن تعداد نودهای فعال
-          if (audioNodes.length > AUDIO_POOL_SIZE * 3) {
-            audioNodes = audioNodes.filter(node => {
-              try { return node.context && node.context.state !== 'closed'; } 
-              catch(e) { return false; }
-            });
+          if (audioNodes.length > AUDIO_POOL_SIZE * 5) {
+            cleanupAudioNodes();
           }
           return osc;
         } catch(e) {
           return null;
         }
+      }
+      
+      function cleanupAudioNodes() {
+        audioNodes = audioNodes.filter(node => {
+          try { return node.context && node.context.state !== 'closed'; } 
+          catch(e) { return false; }
+        });
       }
       
       function sfxCorrect() { initAudio(); playTone(523,'square',0.1,0.2); setTimeout(()=>playTone(659,'square',0.1,0.2),100); setTimeout(()=>playTone(784,'triangle',0.15,0.25),200); }
@@ -503,6 +810,7 @@
       function sfxGameOver() { initAudio(); playTone(300,'sawtooth',0.2,0.3); setTimeout(()=>playTone(200,'sawtooth',0.3,0.2),200); }
       function sfxStart() { initAudio(); playTone(440,'triangle',0.12,0.2); setTimeout(()=>playTone(554,'triangle',0.12,0.2),120); setTimeout(()=>playTone(659,'triangle',0.15,0.25),240); }
       function sfxMedal() { initAudio(); playTone(600,'triangle',0.1,0.2); setTimeout(()=>playTone(800,'triangle',0.1,0.2),100); setTimeout(()=>playTone(1000,'triangle',0.15,0.3),200); }
+      function sfxReward() { initAudio(); playTone(880,'triangle',0.08,0.15); setTimeout(()=>playTone(1100,'triangle',0.1,0.2),80); }
 
       // ==================== PARTICLE SYSTEM ====================
       const particlesContainer = document.getElementById('particlesContainer');
@@ -527,8 +835,7 @@
       }
       initParticles();
 
-      // ==================== واحدهای علمی با validation سخت‌گیرانه ====================
-      // 🟡 مورد ۲: Central registry با base validation
+      // ==================== UNIT SYSTEM ====================
       const UNIT_BASES = {
         length: { base: 'm', dimension: 1 },
         area: { base: 'm²', dimension: 2 },
@@ -563,9 +870,8 @@
 
       function validateUnits(from, to) {
         if (!from || !to) return false;
-        // 🟡 مورد ۲: validation سخت‌گیرانه base mismatch
         if (from.base !== to.base || from.dimension !== to.dimension) {
-          console.warn(`Base mismatch: ${from.base} vs ${to.base}, dimension: ${from.dimension} vs ${to.dimension}`);
+          console.warn(`Base mismatch: ${from.base} vs ${to.base}`);
           return false;
         }
         return true;
@@ -576,41 +882,53 @@
         const to = unitDefinitions[toUnit];
         if (!validateUnits(from, to)) return null;
         
-        // استفاده از scale difference با توجه به dimension
         const scaleDiff = (from.scale - to.scale) * from.dimension;
         return value * Math.pow(10, scaleDiff);
       }
 
-      // ==================== دقت نسبی برای اعداد بزرگ ====================
-      // 🟡 مورد ۱: Relative epsilon برای مقیاس‌های بزرگ
+      // ==================== MATH UTILITIES ====================
+      function round(n) {
+        return parseFloat(n.toFixed(DISPLAY_PRECISION));
+      }
+
+      function clampEducationalNumber(n) {
+        if (!isFinite(n) || isNaN(n)) return 0;
+        
+        const abs = Math.abs(n);
+        
+        if (abs < 0.01) return Math.sign(n) * 0.01;
+        if (abs > 100000) return Math.sign(n) * 100000;
+        
+        return round(n);
+      }
+      
       function isAnswerCorrect(userAnswer, correctAnswer) {
         if (!isFinite(userAnswer) || !isFinite(correctAnswer)) return false;
         if (userAnswer === correctAnswer) return true;
         
-        // استفاده از relative error برای اعداد بزرگ
         const absCorrect = Math.abs(correctAnswer);
         const absDiff = Math.abs(userAnswer - correctAnswer);
         
         if (absCorrect < 1) {
-          // برای اعداد کوچک، از absolute epsilon استفاده کن
           return absDiff < EPSILON;
         } else {
-          // برای اعداد بزرگ، از relative epsilon استفاده کن
           return absDiff / absCorrect < EPSILON;
         }
       }
 
-      // ==================== فرمت‌دهی امن اعداد ====================
       function formatNumber(num) {
         if (!isFinite(num) || isNaN(num)) return '0';
         try {
-          return num.toLocaleString('fa-IR', { maximumFractionDigits: DISPLAY_PRECISION });
+          return num.toLocaleString('fa-IR', { 
+            maximumFractionDigits: DISPLAY_PRECISION,
+            minimumFractionDigits: 0
+          });
         } catch (e) {
           return num.toString();
         }
       }
 
-      // ==================== Utility Functions ====================
+      // ==================== UTILITY FUNCTIONS ====================
       function shuffleArray(arr) {
         const a = [...arr];
         for (let i = a.length - 1; i > 0; i--) {
@@ -625,25 +943,35 @@
         return arr[Math.floor(Math.random() * arr.length)];
       }
 
-      // ==================== Game State ====================
+      // ==================== GAME STATE ====================
       let score = 0, timeLeft = 90, currentQuestion = null, gameActive = false;
       let streak = 0, bestStreak = 0, totalAnswered = 0;
       let level = 1, questionsInLevel = 0;
       let highScore = 0, allMedals = [];
       let powerups = { time: 1, freeze: 1, hint: 1, double: 1 };
-      let doubleActive = false, frozen = false, freezeEndTime = 0;
+      let doubleActive = false, frozen = false;
       let gameMode = 'classic', newMedalsThisRound = [];
       let selectedOptionBtn = null;
       let questionHistory = [];
       let usedCategoryHistory = [];
       let usedUnitPairHistory = [];
       let answerLock = false;
-      
-      // 🟡 مورد ۳: Tracking برای freeze timing در background tabs
+      let nextQuestionLock = false;  // ✅ قفل برای وقفه پاداش
       let lastTickTime = 0;
-      let accumulatedFreezeTime = 0;
+      let freezeStartTime = 0;
+      let tutorialActive = false;
+      
+      let medalProgress = {
+        highestScore: 0,
+        highestStreak: 0,
+        highestLevel: 0,
+        totalAnsweredEver: 0
+      };
+      
+      let medalQueue = [];
+      let isShowingMedal = false;
 
-      // ==================== Difficulty System ====================
+      // ==================== DIFFICULTY SYSTEM ====================
       function getDifficultyLevel() {
         if (score < 80) return 1;
         if (score < 200) return 2;
@@ -670,7 +998,10 @@
         return { min: 3, max: 12, ideal: 7 };
       }
 
-      // ==================== Question Generation ====================
+      // ==================== QUESTION GENERATION ====================
+      let questionCache = new Set();
+      const MAX_CACHE_SIZE = 50;
+      
       function generateQuestion() {
         const MAX_ATTEMPTS = 15;
         
@@ -703,7 +1034,6 @@
             if (u === from) return false;
             const toDef = unitDefinitions[u];
             if (!toDef) return false;
-            // 🟡 مورد ۲: استفاده از validateUnits
             if (!validateUnits(fromDef, toDef)) return false;
             const scaleDiff = Math.abs(fromDef.scale - toDef.scale);
             return scaleDiff >= scaleRange.min && scaleDiff <= scaleRange.max;
@@ -748,6 +1078,17 @@
           const correctAnswer = convertUnit(value, from, to);
           if (correctAnswer === null || isNaN(correctAnswer) || !isFinite(correctAnswer)) continue;
 
+          const questionHash = `${value}-${from}-${to}`;
+          if (questionCache.has(questionHash) && attempt < MAX_ATTEMPTS - 1) {
+            continue;
+          }
+          
+          questionCache.add(questionHash);
+          if (questionCache.size > MAX_CACHE_SIZE) {
+            const entries = [...questionCache];
+            questionCache = new Set(entries.slice(-MAX_CACHE_SIZE / 2));
+          }
+
           usedCategoryHistory.push(catKey);
           if (usedCategoryHistory.length > 10) usedCategoryHistory.shift();
           usedUnitPairHistory.push(pairKey);
@@ -760,7 +1101,6 @@
           };
         }
 
-        // Fallback امن
         const fallbackUnits = categories['length'].units;
         const fFrom = fallbackUnits[0];
         const fTo = fallbackUnits.find(u => u !== fFrom) || fallbackUnits[3];
@@ -803,7 +1143,7 @@
         mass:   { name: 'جرم', icon: '🏋️', units: ['میلی گرم','گرم','کیلوگرم','تن'] }
       };
 
-      // ==================== Options Generation ====================
+      // ==================== ✅ گزینه‌های استاندارد آموزشی ====================
       function generateOptions(question) {
         const correct = question.correctAnswer;
         if (!isFinite(correct) || isNaN(correct)) {
@@ -811,41 +1151,49 @@
         }
 
         const options = new Set();
-        options.add(parseFloat(correct.toFixed(DISPLAY_PRECISION)));
+        options.add(round(correct));
 
-        const strategies = [
-          () => correct === 0 ? 1 : correct * (0.5 + Math.random() * 0.3),
-          () => correct === 0 ? 10 : correct * (1.2 + Math.random() * 0.5),
-          () => correct === 0 ? 5 : correct + (Math.random() - 0.5) * Math.abs(correct) * 0.4,
-          () => correct === 0 ? 100 : correct * Math.pow(10, Math.floor(Math.random() * 3) - 1),
-          () => correct === 0 ? 0.5 : correct * (0.1 + Math.random() * 0.3),
-          () => correct === 0 ? 50 : correct * (1.5 + Math.random() * 1.5),
+        // ✅ Structured Distractors - قابل محاسبه ذهنی
+        const distractors = [
+          // خطای واحدی (scale mistake)
+          correct * 10,
+          correct / 10,
+          correct * 0.1,
+          // خطای انسانی کوچک
+          correct * 1.1,
+          correct * 0.9,
+          // خطای تبدیل نزدیک
+          correct + Math.sqrt(Math.abs(correct) || 1),
+          correct - Math.sqrt(Math.abs(correct) || 1),
+          // نسبت‌های ساده
+          correct * 2,
+          correct * 0.5,
+          correct * 100,
+          correct / 100,
         ];
 
-        const MAX_STRATEGY_ATTEMPTS = 30;
-        for (let i = 0; i < MAX_STRATEGY_ATTEMPTS && options.size < 4; i++) {
-          const strategy = strategies[Math.floor(Math.random() * strategies.length)];
-          let fake = strategy();
-          fake = Math.min(1e9, Math.max(0.0001, fake));
-          fake = parseFloat(fake.toFixed(DISPLAY_PRECISION));
-          
-          if (!isFinite(fake) || isNaN(fake) || fake <= 0) continue;
-          if (options.has(fake)) continue;
-          if (!isAnswerCorrect(fake, correct)) {
-            options.add(fake);
+        for (const d of distractors) {
+          if (options.size >= 4) break;
+          const clamped = clampEducationalNumber(d);
+          if (isFinite(clamped) && clamped > 0 && !options.has(clamped)) {
+            if (!isAnswerCorrect(clamped, correct)) {
+              options.add(clamped);
+            }
           }
         }
 
+        // Fallback
         if (options.size < 4) {
           const fallbacks = correct === 0
-            ? [1, 10, 100, 0.1, 0.01, 0.001]
-            : [correct * 0.5, correct * 2, correct * 0.1, correct * 10, correct * 0.75, correct * 1.5];
+            ? [1, 10, 100, 0.1]
+            : [correct * 2, correct * 0.5, correct * 1.5, correct * 0.75];
           for (const fb of fallbacks) {
             if (options.size >= 4) break;
-            const val = parseFloat(fb.toFixed(DISPLAY_PRECISION));
-            if (!isFinite(val) || val <= 0 || options.has(val)) continue;
-            if (!isAnswerCorrect(val, correct)) {
-              options.add(val);
+            const clamped = clampEducationalNumber(fb);
+            if (isFinite(clamped) && clamped > 0 && !options.has(clamped)) {
+              if (!isAnswerCorrect(clamped, correct)) {
+                options.add(clamped);
+              }
             }
           }
         }
@@ -853,7 +1201,126 @@
         return shuffleArray([...options]).slice(0, 4);
       }
 
-      // ==================== DOM Elements ====================
+      // ==================== MEDAL SYSTEM ====================
+      function loadMedalProgress() {
+        try {
+          const raw = localStorage.getItem(MEDAL_PROGRESS_KEY);
+          if (raw) {
+            const saved = JSON.parse(raw);
+            medalProgress = {
+              highestScore: Math.max(medalProgress.highestScore, saved.highestScore || 0),
+              highestStreak: Math.max(medalProgress.highestStreak, saved.highestStreak || 0),
+              highestLevel: Math.max(medalProgress.highestLevel, saved.highestLevel || 0),
+              totalAnsweredEver: Math.max(medalProgress.totalAnsweredEver, saved.totalAnsweredEver || 0)
+            };
+          }
+        } catch (e) {
+          console.warn('Failed to load medal progress:', e);
+        }
+      }
+      
+      function saveMedalProgress() {
+        try {
+          localStorage.setItem(MEDAL_PROGRESS_KEY, JSON.stringify(medalProgress));
+        } catch (e) {
+          console.warn('Failed to save medal progress:', e);
+        }
+      }
+      
+      function updateMedalProgress() {
+        medalProgress.highestScore = Math.max(medalProgress.highestScore, score);
+        medalProgress.highestStreak = Math.max(medalProgress.highestStreak, bestStreak);
+        medalProgress.highestLevel = Math.max(medalProgress.highestLevel, level);
+        medalProgress.totalAnsweredEver = totalAnswered;
+        saveMedalProgress();
+      }
+      
+      function showMedalQueue() {
+        if (isShowingMedal || medalQueue.length === 0) return;
+        
+        isShowingMedal = true;
+        const medalId = medalQueue.shift();
+        const medal = MEDAL_DEFINITIONS[medalId];
+        
+        if (medal) {
+          medalMessage.textContent = medal.text;
+          medalModalEl.classList.add('active');
+          sfxMedal();
+        }
+      }
+      
+      function checkMedals() {
+        updateMedalProgress();
+        
+        const conditions = {
+          streak5: () => bestStreak >= 5,
+          streak10: () => bestStreak >= 10,
+          score100: () => score >= 100,
+          score300: () => score >= 300,
+          score500: () => score >= 500,
+          level5: () => level >= 5,
+          marathon: () => totalAnswered >= 20
+        };
+        
+        for (const [id, condition] of Object.entries(conditions)) {
+          if (condition() && !allMedals.includes(id) && !newMedalsThisRound.includes(id)) {
+            allMedals.push(id);
+            newMedalsThisRound.push(id);
+            medalQueue.push(id);
+            
+            saveData();
+          }
+        }
+        
+        if (!isShowingMedal && medalQueue.length > 0) {
+          showMedalQueue();
+        }
+      }
+      
+      function closeMedalModal() {
+        medalModalEl.classList.remove('active');
+        isShowingMedal = false;
+        
+        setTimeout(() => {
+          showMedalQueue();
+        }, 300);
+      }
+
+      // ==================== ✅ FOCUS MODE SYSTEM ====================
+      function enterFocusMode() {
+        document.body.classList.add('focus-mode');
+      }
+
+      function exitFocusMode() {
+        document.body.classList.remove('focus-mode');
+      }
+
+      // ==================== ✅ REWARD SYSTEM ====================
+      function showRewardAnimation(earned) {
+        const el = document.createElement('div');
+        el.className = 'reward-animation';
+        el.textContent = `+${earned}`;
+        el.addEventListener('animationend', () => {
+          if (el.parentNode) el.remove();
+        }, { once: true });
+        document.body.appendChild(el);
+        sfxReward();
+      }
+
+      function nextQuestionWithDelay() {
+        if (nextQuestionLock) return;
+        nextQuestionLock = true;
+        
+        exitFocusMode();
+        
+        setTimeout(() => {
+          currentQuestion = generateQuestion();
+          displayQuestion(currentQuestion);
+          nextQuestionLock = false;
+        }, REWARD_PAUSE_DURATION);
+      }
+
+      // ==================== DOM ELEMENTS ====================
       const startScreen = document.getElementById('startScreen');
       const playArea = document.getElementById('playArea');
       const endScreen = document.getElementById('endScreen');
@@ -876,18 +1343,19 @@
       const totalQuestionsSpan = document.getElementById('totalQuestions');
       const bestStreakSpan = document.getElementById('bestStreakSpan');
       const finalLevelSpan = document.getElementById('finalLevelSpan');
-      const medalsEarned = document.getElementById('medalsEarned');
+      const medalsEarnedText = document.getElementById('medalsEarnedText');
+      const medalsSummary = document.getElementById('medalsSummary');
       const newRecordText = document.getElementById('newRecordText');
       const highScoreDisplay = document.getElementById('highScoreDisplay');
       const totalMedalsDisplay = document.getElementById('totalMedalsDisplay');
       const timeSelect = document.getElementById('timeSelect');
       const modeSelect = document.getElementById('modeSelect');
-      const medalModal = document.getElementById('medalModal');
+      const medalModalEl = document.getElementById('medalModal');
       const medalMessage = document.getElementById('medalMessage');
       const powerupBar = document.getElementById('powerupBar');
+      const tutorialModal = document.getElementById('tutorialModal');
 
-      // ==================== Data Persistence با version migration ====================
-      // 🟡 مورد ۵: localStorage با version migration
+      // ==================== DATA PERSISTENCE ====================
       function migrateData() {
         try {
           const currentVersion = parseInt(localStorage.getItem(DATA_VERSION_KEY)) || 0;
@@ -895,9 +1363,7 @@
           if (currentVersion < STORAGE_VERSION) {
             console.log(`Migrating data from v${currentVersion} to v${STORAGE_VERSION}`);
             
-            // تلاش برای خواندن نسخه‌های قبلی
-            const oldVersions = [33, 34];
-            let migrated = false;
+            const oldVersions = [33, 34, 35, 36, 37, 38];
             
             for (const oldVer of oldVersions) {
               if (oldVer >= currentVersion && oldVer < STORAGE_VERSION) {
@@ -906,21 +1372,14 @@
                 
                 if (oldHighScore && !localStorage.getItem(HIGH_SCORE_KEY)) {
                   localStorage.setItem(HIGH_SCORE_KEY, oldHighScore);
-                  migrated = true;
                 }
                 if (oldMedals && !localStorage.getItem(MEDALS_KEY)) {
                   localStorage.setItem(MEDALS_KEY, oldMedals);
-                  migrated = true;
                 }
               }
             }
             
-            // ذخیره نسخه جدید
             localStorage.setItem(DATA_VERSION_KEY, STORAGE_VERSION.toString());
-            
-            if (migrated) {
-              console.log('Data migration completed successfully');
-            }
           }
         } catch (e) {
           console.warn('Data migration failed:', e);
@@ -928,7 +1387,6 @@
       }
 
       function loadSavedData() {
-        // اجرای migration قبل از load
         migrateData();
         
         try {
@@ -950,6 +1408,8 @@
           console.warn('Failed to load medals:', e);
           allMedals = [];
         }
+        
+        loadMedalProgress();
       }
 
       function saveData() {
@@ -966,18 +1426,65 @@
       if (highScoreDisplay) highScoreDisplay.textContent = highScore;
       if (totalMedalsDisplay) totalMedalsDisplay.textContent = allMedals.length;
 
-      // ==================== Event Listeners ====================
-      document.getElementById('startGameBtn')?.addEventListener('click', startGame);
+      // ==================== TUTORIAL SYSTEM ====================
+      function showTutorial() {
+        tutorialActive = true;
+        tutorialModal.classList.add('active');
+      }
+      
+      function hideTutorial() {
+        tutorialModal.classList.remove('active');
+        tutorialActive = false;
+      }
+      
+      function markTutorialAsSeen() {
+        try {
+          localStorage.setItem(HAS_SEEN_TUTORIAL_KEY, '1');
+        } catch (e) {
+          console.warn('Failed to save tutorial state:', e);
+        }
+      }
+      
+      function hasSeenTutorial() {
+        try {
+          return localStorage.getItem(HAS_SEEN_TUTORIAL_KEY) === '1';
+        } catch (e) {
+          return false;
+        }
+      }
+      
+      // ==================== EVENT LISTENERS ====================
+      document.getElementById('startGameBtn')?.addEventListener('click', () => {
+        if (!hasSeenTutorial()) {
+          showTutorial();
+        } else {
+          startGame();
+        }
+      });
+      
+      document.getElementById('startAfterTutorial')?.addEventListener('click', () => {
+        hideTutorial();
+        markTutorialAsSeen();
+        startGame();
+      });
+      
+      document.getElementById('skipTutorial')?.addEventListener('click', () => {
+        hideTutorial();
+        markTutorialAsSeen();
+        startGame();
+      });
+      
       document.getElementById('restartFromPlay')?.addEventListener('click', restartGame);
       document.getElementById('playAgainEnd')?.addEventListener('click', restartGame);
       document.getElementById('submitAnswer')?.addEventListener('click', handleSubmit);
-      document.getElementById('closeMedalModal')?.addEventListener('click', () => medalModal.classList.remove('active'));
+      
+      document.getElementById('closeMedalModal')?.addEventListener('click', closeMedalModal);
 
       powerupBar?.addEventListener('click', (e) => {
         const powerupIcon = e.target.closest('.powerup-icon[data-powerup]');
         if (powerupIcon) {
           const type = powerupIcon.dataset.powerup;
-          if (type && !answerLock && gameActive) {
+          if (type && !answerLock && gameActive && !nextQuestionLock) {
             usePowerup(type);
           }
         }
@@ -991,10 +1498,12 @@
         }
       });
 
-      // ==================== Display Functions ====================
+      // ==================== DISPLAY FUNCTIONS ====================
       function displayQuestion(q) {
         if (!q) return;
         answerLock = false;
+        enterFocusMode();  // ✅ فعال کردن Focus Mode
+        
         questionValueEl.textContent = q.value;
         fromUnitEl.textContent = q.fromUnit;
         toUnitEl.textContent = q.toUnit;
@@ -1023,7 +1532,7 @@
           btn.dataset.value = val;
           btn.textContent = formatNumber(val);
           btn.addEventListener('click', () => {
-            if (!answerLock && gameActive) handleOptionSelect(val, btn);
+            if (!answerLock && gameActive && !nextQuestionLock) handleOptionSelect(val, btn);
           });
           fragment.appendChild(btn);
         });
@@ -1041,7 +1550,7 @@
       }
 
       function handleOptionSelect(val, btn) {
-        if (!gameActive || answerLock) return;
+        if (!gameActive || answerLock || nextQuestionLock) return;
         answerLock = true;
         clearOptionSelection();
         selectedOptionBtn = btn;
@@ -1052,7 +1561,7 @@
       }
 
       function handleSubmit() {
-        if (!gameActive || answerLock) return;
+        if (!gameActive || answerLock || nextQuestionLock) return;
         const inputVal = answerInput.value.trim();
         if (inputVal === '') {
           feedbackMessage.textContent = '⚠️ یک عدد وارد کن!';
@@ -1096,6 +1605,10 @@
           formulaDisplay.style.display = 'inline-block';
           formulaDisplay.textContent = `📐 ${currentQuestion.formula}`;
           sfxCorrect();
+          
+          // ✅ نمایش انیمیشن پاداش
+          showRewardAnimation(earned);
+          
           if (streak >= 3) sfxCombo(streak);
           if (streak === 5 || streak === 10) showComboEffect(`🔥 استریک ${streak}!`);
 
@@ -1107,11 +1620,18 @@
             powerups[pk[Math.floor(Math.random() * pk.length)]]++;
             updatePowerupIcons();
           }
+          
           checkMedals();
+          
           if (gameMode === 'speed') { timeLeft = 10; updateUI(); }
+          
+          // ✅ وقفه پاداش قبل از سوال بعدی
+          nextQuestionWithDelay();
         } else {
           if (gameMode === 'survival') { 
             answerLock = false;
+            nextQuestionLock = false;
+            exitFocusMode();
             endGame(); 
             return; 
           }
@@ -1122,36 +1642,20 @@
           formulaDisplay.style.display = 'inline-block';
           formulaDisplay.textContent = `📐 ${currentQuestion.formula}`;
           sfxWrong();
+          
+          // ✅ در صورت اشتباه هم با تأخیر کم سوال بعدی
+          setTimeout(() => {
+            exitFocusMode();
+            currentQuestion = generateQuestion();
+            displayQuestion(currentQuestion);
+            answerLock = false;
+          }, 400);
         }
 
         questionHistory.push(currentQuestion);
         if (questionHistory.length > 20) questionHistory.shift();
 
         updateUI();
-        currentQuestion = generateQuestion();
-        displayQuestion(currentQuestion);
-      }
-
-      function checkMedals() {
-        const checks = [
-          { id: 'streak5', c: bestStreak >= 5, t: '🔥 استریک ۵' },
-          { id: 'streak10', c: bestStreak >= 10, t: '🔥🔥 استریک ۱۰' },
-          { id: 'score100', c: score >= 100, t: '💯 امتیاز ۱۰۰' },
-          { id: 'score300', c: score >= 300, t: '🏆 امتیاز ۳۰۰' },
-          { id: 'score500', c: score >= 500, t: '👑 امتیاز ۵۰۰' },
-          { id: 'level5', c: level >= 5, t: '⭐ سطح ۵' },
-          { id: 'marathon', c: totalAnswered >= 30, t: '🏃 ماراتن ۳۰' }
-        ];
-        checks.forEach(m => {
-          if (m.c && !allMedals.includes(m.id) && !newMedalsThisRound.includes(m.id)) {
-            allMedals.push(m.id);
-            newMedalsThisRound.push(m.id);
-            medalMessage.textContent = m.t;
-            medalModal.classList.add('active');
-            sfxMedal();
-          }
-        });
-        saveData();
       }
 
       function usePowerup(type) {
@@ -1166,8 +1670,7 @@
             break;
           case 'freeze':
             frozen = true;
-            freezeEndTime = Date.now() + 5000;
-            accumulatedFreezeTime = 0; // ریست tracking
+            freezeStartTime = Date.now();
             break;
           case 'hint':
             selectedOptionBtn = null;
@@ -1210,13 +1713,12 @@
       function updateUI() {
         scoreDisplay.textContent = score;
         timerDisplay.textContent = timeLeft;
-        roundDisplay.textContent = totalAnswered + 1;
+        roundDisplay.textContent = totalAnswered;
         levelDisplay.textContent = level;
         timerBox.classList.toggle('danger', timeLeft <= 10);
       }
 
-      // ==================== Timer با مدیریت background tabs ====================
-      // 🟡 مورد ۳: مقاوم در برابر background throttling
+      // ==================== TIMER ====================
       let timerId = 0;
 
       function resetTimer() {
@@ -1225,9 +1727,8 @@
           timerId = 0;
         }
         frozen = false;
-        freezeEndTime = 0;
+        freezeStartTime = 0;
         lastTickTime = 0;
-        accumulatedFreezeTime = 0;
       }
 
       function startTimer() {
@@ -1241,27 +1742,20 @@
           const elapsed = now - lastTickTime;
           lastTickTime = now;
           
-          // 🟡 مورد ۳: مدیریت freeze با محاسبه زمان واقعی
           if (frozen) {
-            accumulatedFreezeTime += elapsed;
-            if (accumulatedFreezeTime >= 5000) {
-              // freeze تمام شده
-              frozen = false;
-              freezeEndTime = 0;
-              accumulatedFreezeTime = 0;
-              // جبران زمان از دست رفته در این tick
-            } else {
-              return; // هنوز در freeze
+            const freezeElapsed = now - freezeStartTime;
+            if (freezeElapsed < 5000) {
+              return;
             }
+            frozen = false;
+            freezeStartTime = 0;
           }
           
-          // اگر tab background بوده و elapsed خیلی زیاد شده
           if (elapsed > 2000) {
-            // جبران زمان از دست رفته
             const lostTicks = Math.floor(elapsed / 1000) - 1;
             if (lostTicks > 0) {
               timeLeft = Math.max(0, timeLeft - lostTicks);
-              console.warn(`Compensating for ${lostTicks} lost seconds (tab was in background)`);
+              console.warn(`Compensating for ${lostTicks} lost seconds`);
             }
           }
           
@@ -1282,20 +1776,27 @@
         questionHistory = [];
         usedCategoryHistory = [];
         usedUnitPairHistory = [];
+        questionCache = new Set();
         level = 1;
         questionsInLevel = 0;
         powerups = { time: 1, freeze: 1, hint: 1, double: 1 };
         doubleActive = false;
         frozen = false;
-        freezeEndTime = 0;
+        freezeStartTime = 0;
         gameActive = false;
         currentQuestion = null;
         newMedalsThisRound = [];
         selectedOptionBtn = null;
         answerLock = false;
+        nextQuestionLock = false;  // ✅ ریست قفل
         lastTickTime = 0;
-        accumulatedFreezeTime = 0;
         gameMode = modeSelect?.value || 'classic';
+        
+        medalQueue = [];
+        isShowingMedal = false;
+        if (medalModalEl) medalModalEl.classList.remove('active');
+        
+        exitFocusMode();  // ✅ خروج از Focus Mode
       }
 
       function startGame() {
@@ -1320,33 +1821,38 @@
       function endGame() {
         gameActive = false;
         answerLock = false;
+        nextQuestionLock = false;
+        exitFocusMode();  // ✅ خروج از Focus Mode
         resetTimer();
         sfxGameOver();
+        
+        checkMedals();
+        
         playArea.style.display = 'none';
         endScreen.style.display = 'block';
         finalScoreSpan.textContent = score;
         totalQuestionsSpan.textContent = totalAnswered;
         bestStreakSpan.textContent = bestStreak;
         finalLevelSpan.textContent = level;
+        
         if (newMedalsThisRound.length > 0) {
-          const texts = newMedalsThisRound.map(id => {
-            const found = [
-              { id: 'streak5', t: '🔥 استریک ۵' }, { id: 'streak10', t: '🔥🔥 استریک ۱۰' },
-              { id: 'score100', t: '💯 امتیاز ۱۰۰' }, { id: 'score300', t: '🏆 امتیاز ۳۰۰' },
-              { id: 'score500', t: '👑 امتیاز ۵۰۰' }, { id: 'level5', t: '⭐ سطح ۵' },
-              { id: 'marathon', t: '🏃 ماراتن ۳۰' }
-            ].find(m => m.id === id);
-            return found ? found.t : id;
-          });
-          medalsEarned.textContent = texts.join(' | ');
+          medalsSummary.innerHTML = newMedalsThisRound.map(id => {
+            const medal = MEDAL_DEFINITIONS[id];
+            return medal ? `<span class="medal-badge">${medal.icon} ${medal.text}</span>` : '';
+          }).join('');
+          if (medalsEarnedText) medalsEarnedText.textContent = '🏅 مدال‌های این دور:';
         } else {
-          medalsEarned.textContent = 'این دور مدال جدیدی نگرفتی!';
+          medalsSummary.innerHTML = '';
+          if (medalsEarnedText) medalsEarnedText.textContent = 'این دور مدال جدیدی نگرفتی! 😢';
         }
+        
         let isNew = false;
         if (score > highScore) { highScore = score; saveData(); isNew = true; }
         newRecordText.textContent = isNew ? '🏆 رکورد جدید! آفرین!' : '';
         if (highScoreDisplay) highScoreDisplay.textContent = highScore;
         if (totalMedalsDisplay) totalMedalsDisplay.textContent = allMedals.length;
+        
+        saveMedalProgress();
       }
 
       function restartGame() {
@@ -1354,20 +1860,13 @@
         startGame();
       }
 
-      // Cleanup کامل
       function cleanup() {
         resetTimer();
         gameActive = false;
         answerLock = false;
-        
-        // 🟡 مورد ۴: پاکسازی نودهای صوتی
-        audioNodes.forEach(node => {
-          try { 
-            node.stop(); 
-            node.disconnect(); 
-          } catch(e) {}
-        });
-        audioNodes = [];
+        nextQuestionLock = false;
+        exitFocusMode();
+        cleanupAudioNodes();
         
         if (audioCtx && audioCtx.state !== 'closed') {
           try { audioCtx.close(); } catch(e) {}
@@ -1377,13 +1876,10 @@
 
       window.addEventListener('beforeunload', cleanup);
       
-      // 🟡 مورد ۳: مدیریت visibility change برای بهبود timing
       document.addEventListener('visibilitychange', () => {
         if (document.hidden) {
-          // Tab در background رفته - آپدیت lastTickTime
           lastTickTime = Date.now();
         } else if (gameActive) {
-          // Tab برگشته - ریست کردن lastTickTime برای جلوگیری از جبران اشتباه
           lastTickTime = Date.now();
         }
       });
