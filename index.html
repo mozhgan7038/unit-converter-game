@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=1.5">
-  <title>نبرد واحدها 3.9 | نسخه آموزشی نهایی ⚔️</title>
+  <title>نبرد واحدها 3.8 | نسخه پایدار نهایی ⚔️</title>
   
+  <!-- فونت Vazirmatn -->
   <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   
   <style>
@@ -25,12 +26,6 @@
       direction: rtl;
       position: relative;
       overflow-x: hidden;
-      transition: background 0.8s ease;
-    }
-
-    /* ✅ Focus Mode - کاهش شلوغی بصری */
-    body.focus-mode {
-      background: radial-gradient(circle at 20% 20%, #14261d 0%, #0a180f 100%);
     }
 
     .particles-container {
@@ -41,11 +36,6 @@
       height: 100%;
       pointer-events: none;
       z-index: 0;
-      transition: opacity 0.6s ease;
-    }
-
-    body.focus-mode .particles-container {
-      opacity: 0.3;
     }
 
     .particle {
@@ -75,12 +65,7 @@
       position: relative;
       z-index: 2;
       color: #f0e6c5;
-      transition: all 0.6s ease;
-    }
-
-    body.focus-mode .game-container {
-      border-color: #f5c542;
-      box-shadow: 0 30px 60px rgba(0,0,0,0.9), 0 0 50px rgba(230,180,34,0.5);
+      transition: 0.3s;
     }
 
     .game-container.shake {
@@ -105,15 +90,6 @@
       box-shadow: 0 6px 0 #0f130c;
       flex-wrap: wrap;
       gap: 8px;
-      transition: all 0.5s ease;
-    }
-
-    /* ✅ کاهش opacity در Focus Mode */
-    body.focus-mode .header {
-      opacity: 0.25;
-      transform: scale(0.96);
-      pointer-events: none;
-      filter: blur(1px);
     }
 
     .score-box, .timer-box, .round-box, .level-box {
@@ -146,17 +122,6 @@
       margin: 15px 0;
       text-align: center;
       position: relative;
-      transition: all 0.5s ease;
-    }
-
-    /* ✅ برجسته‌سازی سوال در Focus Mode */
-    body.focus-mode .challenge-area {
-      transform: scale(1.02);
-      border-color: #f5c542;
-      border-width: 3px;
-      border-style: solid;
-      background: radial-gradient(circle at center, #2d4a2d, #1a2a1a);
-      box-shadow: 0 0 40px rgba(230,180,34,0.4);
     }
 
     .category-badge {
@@ -169,7 +134,6 @@
       border-radius: 20px;
       font-size: 0.85rem;
       font-weight: 700;
-      transition: all 0.5s ease;
     }
 
     .difficulty-indicator {
@@ -193,15 +157,6 @@
       padding: 8px 30px;
       border-radius: 50px;
       font-variant-numeric: tabular-nums;
-      transition: all 0.5s ease;
-    }
-
-    /* ✅ سوال درشت‌تر در Focus Mode */
-    body.focus-mode .question-text {
-      font-size: 2.8rem;
-      box-shadow: 0 0 30px rgba(230,180,34,0.5);
-      color: #fff;
-      text-shadow: 0 4px 0 #2a3a1a;
     }
 
     .unit-label {
@@ -213,19 +168,9 @@
       border-radius: 30px;
       display: inline-block;
       margin: 0 5px;
-      transition: all 0.5s ease;
     }
 
-    body.focus-mode .unit-label {
-      font-size: 1.6rem;
-      background: #d4a94c;
-    }
-
-    .arrow-icon { font-size: 2rem; margin: 0 8px; transition: all 0.5s ease; }
-
-    body.focus-mode .arrow-icon {
-      font-size: 2.5rem;
-    }
+    .arrow-icon { font-size: 2rem; margin: 0 8px; }
 
     .input-group {
       display: flex;
@@ -234,11 +179,6 @@
       justify-content: center;
       gap: 10px;
       margin-top: 15px;
-      transition: all 0.5s ease;
-    }
-
-    body.focus-mode .input-group {
-      margin-top: 20px;
     }
 
     .answer-input {
@@ -256,13 +196,6 @@
       transition: 0.2s;
       font-family: 'Vazirmatn', sans-serif;
       font-variant-numeric: tabular-nums;
-    }
-
-    body.focus-mode .answer-input {
-      width: 160px;
-      font-size: 1.8rem;
-      border-color: #f5c542;
-      box-shadow: 0 0 25px rgba(230,180,34,0.7);
     }
 
     .answer-input:disabled {
@@ -293,11 +226,6 @@
       grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
       gap: 10px;
       margin: 15px 0;
-      transition: all 0.5s ease;
-    }
-
-    body.focus-mode .options-grid {
-      gap: 15px;
     }
 
     .option-btn {
@@ -340,21 +268,9 @@
       min-height: 30px;
       font-size: 1.2rem;
       text-align: center;
-      transition: all 0.3s ease;
     }
-    .feedback.correct-feedback { 
-      color: #a5e65c; 
-      text-shadow: 0 0 10px #5f9e2c;
-      font-size: 1.4rem;
-      animation: feedbackPop 0.5s ease-out;
-    }
+    .feedback.correct-feedback { color: #a5e65c; text-shadow: 0 0 10px #5f9e2c; }
     .feedback.wrong-feedback { color: #ff7b6b; text-shadow: 0 0 10px #b32a1a; }
-
-    @keyframes feedbackPop {
-      0% { transform: scale(0.8); opacity: 0; }
-      50% { transform: scale(1.1); }
-      100% { transform: scale(1); opacity: 1; }
-    }
 
     .formula-box {
       background: rgba(0,0,0,0.4);
@@ -366,7 +282,6 @@
       display: inline-block;
       direction: ltr;
       font-weight: 500;
-      transition: all 0.3s ease;
     }
 
     .start-btn {
@@ -430,17 +345,7 @@
       justify-content: center;
       margin: 8px 0;
       flex-wrap: wrap;
-      transition: all 0.5s ease;
     }
-
-    /* ✅ کاهش powerup bar در Focus Mode */
-    body.focus-mode .powerup-bar {
-      opacity: 0.25;
-      transform: scale(0.96);
-      pointer-events: none;
-      filter: blur(1px);
-    }
-
     .powerup-icon {
       background: #2d3a2c;
       border: 2px solid #8f7a4b;
@@ -559,27 +464,6 @@
       50% { transform: scale(1.2); }
       100% { transform: scale(1); opacity: 1; }
     }
-
-    /* ✅ انیمیشن پاداش */
-    .reward-animation {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 3rem;
-      font-weight: 900;
-      color: #ffd966;
-      pointer-events: none;
-      z-index: 100;
-      animation: rewardPopup 0.8s ease-out forwards;
-      text-shadow: 0 0 30px rgba(255,217,102,0.8);
-    }
-    
-    @keyframes rewardPopup {
-      0% { opacity:0; transform: translate(-50%, -50%) scale(0.3) rotate(-10deg); }
-      30% { opacity:1; transform: translate(-50%, -70%) scale(1.2) rotate(5deg); }
-      100% { opacity:0; transform: translate(-50%, -120%) scale(1) rotate(0); }
-    }
   </style>
 </head>
 <body>
@@ -595,9 +479,9 @@
 
     <div id="dynamicContent">
       <div id="startScreen" style="text-align:center; padding:20px;">
-        <h2 style="color:#e7c568; font-weight:900; font-size:2rem;">⚔️ نبرد واحدها 3.9 ⚔️</h2>
+        <h2 style="color:#e7c568; font-weight:900; font-size:2rem;">⚔️ نبرد واحدها 3.8 ⚔️</h2>
         <p style="margin:15px 0; font-weight:600;">📏 طول | 📐 مساحت | 🧊 حجم | 💧 مایعات | 🏋️ جرم</p>
-        <p style="color:#ccb27c; font-size:0.85rem; font-weight:500;">🎮 نسخه آموزشی - یادگیری با لذت</p>
+        <p style="color:#ccb27c; font-size:0.85rem; font-weight:500;">🔬 نسخه پایدار نهایی - تمام باگ‌ها رفع شده</p>
         <div style="margin:10px 0;">
           <label style="font-weight:600;">⏱️ زمان: </label>
           <select id="timeSelect" style="padding:6px; border-radius:20px; background:#2d3a2c; color:#f0e6c5; font-family:'Vazirmatn',sans-serif;">
@@ -730,7 +614,7 @@
   <script>
     (function() {
       // ==================== CONSTANTS ====================
-      const STORAGE_VERSION = 39;
+      const STORAGE_VERSION = 38;
       const STORAGE_PREFIX = 'unitWar';
       const DATA_VERSION_KEY = `${STORAGE_PREFIX}_dataVersion`;
       const HIGH_SCORE_KEY = `${STORAGE_PREFIX}_highScore_v${STORAGE_VERSION}`;
@@ -743,8 +627,8 @@
       const MAX_PARTICLES = 25;
       const QUESTIONS_PER_LEVEL = 5;
       const AUDIO_POOL_SIZE = 4;
-      const REWARD_PAUSE_DURATION = 800; // ✅ وقفه پاداش (میلی‌ثانیه)
       
+      // ✅ Central registry برای مدال‌ها
       const MEDAL_DEFINITIONS = {
         streak5: { id: 'streak5', text: '🔥 استریک ۵', icon: '🔥' },
         streak10: { id: 'streak10', text: '🔥🔥 استریک ۱۰', icon: '🔥🔥' },
@@ -787,6 +671,7 @@
           };
           audioNodes.push(osc);
           
+          // ✅ پاکسازی دوره‌ای نودهای صوتی
           if (audioNodes.length > AUDIO_POOL_SIZE * 5) {
             cleanupAudioNodes();
           }
@@ -798,8 +683,11 @@
       
       function cleanupAudioNodes() {
         audioNodes = audioNodes.filter(node => {
-          try { return node.context && node.context.state !== 'closed'; } 
-          catch(e) { return false; }
+          try { 
+            return node.context && node.context.state !== 'closed'; 
+          } catch(e) { 
+            return false; 
+          }
         });
       }
       
@@ -810,7 +698,6 @@
       function sfxGameOver() { initAudio(); playTone(300,'sawtooth',0.2,0.3); setTimeout(()=>playTone(200,'sawtooth',0.3,0.2),200); }
       function sfxStart() { initAudio(); playTone(440,'triangle',0.12,0.2); setTimeout(()=>playTone(554,'triangle',0.12,0.2),120); setTimeout(()=>playTone(659,'triangle',0.15,0.25),240); }
       function sfxMedal() { initAudio(); playTone(600,'triangle',0.1,0.2); setTimeout(()=>playTone(800,'triangle',0.1,0.2),100); setTimeout(()=>playTone(1000,'triangle',0.15,0.3),200); }
-      function sfxReward() { initAudio(); playTone(880,'triangle',0.08,0.15); setTimeout(()=>playTone(1100,'triangle',0.1,0.2),80); }
 
       // ==================== PARTICLE SYSTEM ====================
       const particlesContainer = document.getElementById('particlesContainer');
@@ -887,10 +774,6 @@
       }
 
       // ==================== MATH UTILITIES ====================
-      function round(n) {
-        return parseFloat(n.toFixed(DISPLAY_PRECISION));
-      }
-
       function clampEducationalNumber(n) {
         if (!isFinite(n) || isNaN(n)) return 0;
         
@@ -899,7 +782,7 @@
         if (abs < 0.01) return Math.sign(n) * 0.01;
         if (abs > 100000) return Math.sign(n) * 100000;
         
-        return round(n);
+        return parseFloat(n.toFixed(2));
       }
       
       function isAnswerCorrect(userAnswer, correctAnswer) {
@@ -956,11 +839,11 @@
       let usedCategoryHistory = [];
       let usedUnitPairHistory = [];
       let answerLock = false;
-      let nextQuestionLock = false;  // ✅ قفل برای وقفه پاداش
       let lastTickTime = 0;
-      let freezeStartTime = 0;
+      let freezeStartTime = 0;  // ✅ اصلاح‌شده: یکپارچه‌سازی freeze timing
       let tutorialActive = false;
       
+      // ✅ سیستم مدال‌ها
       let medalProgress = {
         highestScore: 0,
         highestStreak: 0,
@@ -998,7 +881,8 @@
         return { min: 3, max: 12, ideal: 7 };
       }
 
-      // ==================== QUESTION GENERATION ====================
+      // ==================== QUESTION GENERATION با کش بهبودیافته ====================
+      // ✅ کش برای جلوگیری از تولید سوال تکراری
       let questionCache = new Set();
       const MAX_CACHE_SIZE = 50;
       
@@ -1078,13 +962,16 @@
           const correctAnswer = convertUnit(value, from, to);
           if (correctAnswer === null || isNaN(correctAnswer) || !isFinite(correctAnswer)) continue;
 
+          // ✅ کش کردن سوال برای جلوگیری از تکرار
           const questionHash = `${value}-${from}-${to}`;
           if (questionCache.has(questionHash) && attempt < MAX_ATTEMPTS - 1) {
             continue;
           }
           
+          // اضافه به کش
           questionCache.add(questionHash);
           if (questionCache.size > MAX_CACHE_SIZE) {
+            // پاکسازی قدیمی‌ترین‌ها
             const entries = [...questionCache];
             questionCache = new Set(entries.slice(-MAX_CACHE_SIZE / 2));
           }
@@ -1101,6 +988,7 @@
           };
         }
 
+        // Fallback
         const fallbackUnits = categories['length'].units;
         const fFrom = fallbackUnits[0];
         const fTo = fallbackUnits.find(u => u !== fFrom) || fallbackUnits[3];
@@ -1143,7 +1031,7 @@
         mass:   { name: 'جرم', icon: '🏋️', units: ['میلی گرم','گرم','کیلوگرم','تن'] }
       };
 
-      // ==================== ✅ گزینه‌های استاندارد آموزشی ====================
+      // ==================== OPTIONS GENERATION ====================
       function generateOptions(question) {
         const correct = question.correctAnswer;
         if (!isFinite(correct) || isNaN(correct)) {
@@ -1151,49 +1039,48 @@
         }
 
         const options = new Set();
-        options.add(round(correct));
+        options.add(parseFloat(correct.toFixed(DISPLAY_PRECISION)));
 
-        // ✅ Structured Distractors - قابل محاسبه ذهنی
-        const distractors = [
-          // خطای واحدی (scale mistake)
-          correct * 10,
-          correct / 10,
-          correct * 0.1,
-          // خطای انسانی کوچک
-          correct * 1.1,
-          correct * 0.9,
-          // خطای تبدیل نزدیک
-          correct + Math.sqrt(Math.abs(correct) || 1),
-          correct - Math.sqrt(Math.abs(correct) || 1),
-          // نسبت‌های ساده
-          correct * 2,
-          correct * 0.5,
-          correct * 100,
-          correct / 100,
+        // ✅ استراتژی‌های متعادل‌تر برای گزینه‌ها
+        const strategies = [
+          () => correct * (0.75 + Math.random() * 0.5),    // 0.75x تا 1.25x
+          () => correct + (Math.random() - 0.5) * Math.abs(correct) * 0.25,  // ±25%
+          () => correct * (1.5 + Math.random() * 0.5),     // 1.5x تا 2x
+          () => correct * (0.3 + Math.random() * 0.3),     // 0.3x تا 0.6x
+          () => correct * (2 + Math.random() * 3),         // 2x تا 5x
+          () => correct * (0.15 + Math.random() * 0.15),   // 0.15x تا 0.3x
         ];
 
-        for (const d of distractors) {
-          if (options.size >= 4) break;
-          const clamped = clampEducationalNumber(d);
-          if (isFinite(clamped) && clamped > 0 && !options.has(clamped)) {
-            if (!isAnswerCorrect(clamped, correct)) {
-              options.add(clamped);
-            }
+        const MAX_STRATEGY_ATTEMPTS = 30;
+        for (let i = 0; i < MAX_STRATEGY_ATTEMPTS && options.size < 4; i++) {
+          const strategy = strategies[Math.floor(Math.random() * strategies.length)];
+          let fake = strategy();
+          
+          fake = clampEducationalNumber(fake);
+          
+          if (!isFinite(fake) || isNaN(fake) || fake <= 0) continue;
+          if (options.has(fake)) continue;
+          if (!isAnswerCorrect(fake, correct)) {
+            options.add(fake);
           }
         }
 
-        // Fallback
         if (options.size < 4) {
           const fallbacks = correct === 0
             ? [1, 10, 100, 0.1]
-            : [correct * 2, correct * 0.5, correct * 1.5, correct * 0.75];
+            : [
+                clampEducationalNumber(correct * 0.5),
+                clampEducationalNumber(correct * 2),
+                clampEducationalNumber(correct * 0.25),
+                clampEducationalNumber(correct * 4),
+                clampEducationalNumber(correct * 0.75),
+                clampEducationalNumber(correct * 1.5),
+              ];
           for (const fb of fallbacks) {
             if (options.size >= 4) break;
-            const clamped = clampEducationalNumber(fb);
-            if (isFinite(clamped) && clamped > 0 && !options.has(clamped)) {
-              if (!isAnswerCorrect(clamped, correct)) {
-                options.add(clamped);
-              }
+            if (!isFinite(fb) || fb <= 0 || options.has(fb)) continue;
+            if (!isAnswerCorrect(fb, correct)) {
+              options.add(fb);
             }
           }
         }
@@ -1201,7 +1088,7 @@
         return shuffleArray([...options]).slice(0, 4);
       }
 
-      // ==================== MEDAL SYSTEM ====================
+      // ==================== MEDAL SYSTEM (کاملاً اصلاح‌شده) ====================
       function loadMedalProgress() {
         try {
           const raw = localStorage.getItem(MEDAL_PROGRESS_KEY);
@@ -1235,6 +1122,7 @@
         saveMedalProgress();
       }
       
+      // ✅ سیستم صف مدال‌ها event-driven
       function showMedalQueue() {
         if (isShowingMedal || medalQueue.length === 0) return;
         
@@ -1272,52 +1160,21 @@
           }
         }
         
+        // نمایش صف
         if (!isShowingMedal && medalQueue.length > 0) {
           showMedalQueue();
         }
       }
       
+      // ✅ بستن مودال مدال event-driven
       function closeMedalModal() {
         medalModalEl.classList.remove('active');
         isShowingMedal = false;
         
+        // نمایش مدال بعدی
         setTimeout(() => {
           showMedalQueue();
         }, 300);
-      }
-
-      // ==================== ✅ FOCUS MODE SYSTEM ====================
-      function enterFocusMode() {
-        document.body.classList.add('focus-mode');
-      }
-
-      function exitFocusMode() {
-        document.body.classList.remove('focus-mode');
-      }
-
-      // ==================== ✅ REWARD SYSTEM ====================
-      function showRewardAnimation(earned) {
-        const el = document.createElement('div');
-        el.className = 'reward-animation';
-        el.textContent = `+${earned}`;
-        el.addEventListener('animationend', () => {
-          if (el.parentNode) el.remove();
-        }, { once: true });
-        document.body.appendChild(el);
-        sfxReward();
-      }
-
-      function nextQuestionWithDelay() {
-        if (nextQuestionLock) return;
-        nextQuestionLock = true;
-        
-        exitFocusMode();
-        
-        setTimeout(() => {
-          currentQuestion = generateQuestion();
-          displayQuestion(currentQuestion);
-          nextQuestionLock = false;
-        }, REWARD_PAUSE_DURATION);
       }
 
       // ==================== DOM ELEMENTS ====================
@@ -1350,7 +1207,7 @@
       const totalMedalsDisplay = document.getElementById('totalMedalsDisplay');
       const timeSelect = document.getElementById('timeSelect');
       const modeSelect = document.getElementById('modeSelect');
-      const medalModalEl = document.getElementById('medalModal');
+      const medalModalEl = document.getElementById('medalModal');  // ✅ اصلاح نام
       const medalMessage = document.getElementById('medalMessage');
       const powerupBar = document.getElementById('powerupBar');
       const tutorialModal = document.getElementById('tutorialModal');
@@ -1363,7 +1220,7 @@
           if (currentVersion < STORAGE_VERSION) {
             console.log(`Migrating data from v${currentVersion} to v${STORAGE_VERSION}`);
             
-            const oldVersions = [33, 34, 35, 36, 37, 38];
+            const oldVersions = [33, 34, 35, 36, 37];
             
             for (const oldVer of oldVersions) {
               if (oldVer >= currentVersion && oldVer < STORAGE_VERSION) {
@@ -1478,13 +1335,14 @@
       document.getElementById('playAgainEnd')?.addEventListener('click', restartGame);
       document.getElementById('submitAnswer')?.addEventListener('click', handleSubmit);
       
+      // ✅ اصلاح event listener برای بستن مودال مدال
       document.getElementById('closeMedalModal')?.addEventListener('click', closeMedalModal);
 
       powerupBar?.addEventListener('click', (e) => {
         const powerupIcon = e.target.closest('.powerup-icon[data-powerup]');
         if (powerupIcon) {
           const type = powerupIcon.dataset.powerup;
-          if (type && !answerLock && gameActive && !nextQuestionLock) {
+          if (type && !answerLock && gameActive) {
             usePowerup(type);
           }
         }
@@ -1502,8 +1360,6 @@
       function displayQuestion(q) {
         if (!q) return;
         answerLock = false;
-        enterFocusMode();  // ✅ فعال کردن Focus Mode
-        
         questionValueEl.textContent = q.value;
         fromUnitEl.textContent = q.fromUnit;
         toUnitEl.textContent = q.toUnit;
@@ -1532,7 +1388,7 @@
           btn.dataset.value = val;
           btn.textContent = formatNumber(val);
           btn.addEventListener('click', () => {
-            if (!answerLock && gameActive && !nextQuestionLock) handleOptionSelect(val, btn);
+            if (!answerLock && gameActive) handleOptionSelect(val, btn);
           });
           fragment.appendChild(btn);
         });
@@ -1550,7 +1406,7 @@
       }
 
       function handleOptionSelect(val, btn) {
-        if (!gameActive || answerLock || nextQuestionLock) return;
+        if (!gameActive || answerLock) return;
         answerLock = true;
         clearOptionSelection();
         selectedOptionBtn = btn;
@@ -1561,7 +1417,7 @@
       }
 
       function handleSubmit() {
-        if (!gameActive || answerLock || nextQuestionLock) return;
+        if (!gameActive || answerLock) return;
         const inputVal = answerInput.value.trim();
         if (inputVal === '') {
           feedbackMessage.textContent = '⚠️ یک عدد وارد کن!';
@@ -1605,10 +1461,6 @@
           formulaDisplay.style.display = 'inline-block';
           formulaDisplay.textContent = `📐 ${currentQuestion.formula}`;
           sfxCorrect();
-          
-          // ✅ نمایش انیمیشن پاداش
-          showRewardAnimation(earned);
-          
           if (streak >= 3) sfxCombo(streak);
           if (streak === 5 || streak === 10) showComboEffect(`🔥 استریک ${streak}!`);
 
@@ -1624,14 +1476,9 @@
           checkMedals();
           
           if (gameMode === 'speed') { timeLeft = 10; updateUI(); }
-          
-          // ✅ وقفه پاداش قبل از سوال بعدی
-          nextQuestionWithDelay();
         } else {
           if (gameMode === 'survival') { 
             answerLock = false;
-            nextQuestionLock = false;
-            exitFocusMode();
             endGame(); 
             return; 
           }
@@ -1642,20 +1489,14 @@
           formulaDisplay.style.display = 'inline-block';
           formulaDisplay.textContent = `📐 ${currentQuestion.formula}`;
           sfxWrong();
-          
-          // ✅ در صورت اشتباه هم با تأخیر کم سوال بعدی
-          setTimeout(() => {
-            exitFocusMode();
-            currentQuestion = generateQuestion();
-            displayQuestion(currentQuestion);
-            answerLock = false;
-          }, 400);
         }
 
         questionHistory.push(currentQuestion);
         if (questionHistory.length > 20) questionHistory.shift();
 
         updateUI();
+        currentQuestion = generateQuestion();
+        displayQuestion(currentQuestion);
       }
 
       function usePowerup(type) {
@@ -1670,7 +1511,7 @@
             break;
           case 'freeze':
             frozen = true;
-            freezeStartTime = Date.now();
+            freezeStartTime = Date.now();  // ✅ اصلاح‌شده
             break;
           case 'hint':
             selectedOptionBtn = null;
@@ -1713,12 +1554,13 @@
       function updateUI() {
         scoreDisplay.textContent = score;
         timerDisplay.textContent = timeLeft;
+        // ✅ اصلاح off-by-one: نمایش تعداد واقعی سوالات پاسخ داده شده
         roundDisplay.textContent = totalAnswered;
         levelDisplay.textContent = level;
         timerBox.classList.toggle('danger', timeLeft <= 10);
       }
 
-      // ==================== TIMER ====================
+      // ==================== TIMER با freeze یکپارچه ====================
       let timerId = 0;
 
       function resetTimer() {
@@ -1742,15 +1584,18 @@
           const elapsed = now - lastTickTime;
           lastTickTime = now;
           
+          // ✅ اصلاح freeze: استفاده از freezeStartTime یکپارچه
           if (frozen) {
             const freezeElapsed = now - freezeStartTime;
             if (freezeElapsed < 5000) {
-              return;
+              return; // هنوز در حالت freeze
             }
+            // freeze تمام شده
             frozen = false;
             freezeStartTime = 0;
           }
           
+          // جبران background throttling
           if (elapsed > 2000) {
             const lostTicks = Math.floor(elapsed / 1000) - 1;
             if (lostTicks > 0) {
@@ -1776,7 +1621,7 @@
         questionHistory = [];
         usedCategoryHistory = [];
         usedUnitPairHistory = [];
-        questionCache = new Set();
+        questionCache = new Set();  // ✅ پاکسازی کش
         level = 1;
         questionsInLevel = 0;
         powerups = { time: 1, freeze: 1, hint: 1, double: 1 };
@@ -1788,15 +1633,13 @@
         newMedalsThisRound = [];
         selectedOptionBtn = null;
         answerLock = false;
-        nextQuestionLock = false;  // ✅ ریست قفل
         lastTickTime = 0;
         gameMode = modeSelect?.value || 'classic';
         
+        // ✅ ریست صف مدال‌ها
         medalQueue = [];
         isShowingMedal = false;
         if (medalModalEl) medalModalEl.classList.remove('active');
-        
-        exitFocusMode();  // ✅ خروج از Focus Mode
       }
 
       function startGame() {
@@ -1821,11 +1664,10 @@
       function endGame() {
         gameActive = false;
         answerLock = false;
-        nextQuestionLock = false;
-        exitFocusMode();  // ✅ خروج از Focus Mode
         resetTimer();
         sfxGameOver();
         
+        // ✅ چک نهایی مدال‌ها
         checkMedals();
         
         playArea.style.display = 'none';
@@ -1835,6 +1677,7 @@
         bestStreakSpan.textContent = bestStreak;
         finalLevelSpan.textContent = level;
         
+        // ✅ نمایش مدال‌ها
         if (newMedalsThisRound.length > 0) {
           medalsSummary.innerHTML = newMedalsThisRound.map(id => {
             const medal = MEDAL_DEFINITIONS[id];
@@ -1860,12 +1703,11 @@
         startGame();
       }
 
+      // Cleanup
       function cleanup() {
         resetTimer();
         gameActive = false;
         answerLock = false;
-        nextQuestionLock = false;
-        exitFocusMode();
         cleanupAudioNodes();
         
         if (audioCtx && audioCtx.state !== 'closed') {
