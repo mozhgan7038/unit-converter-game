@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=1.5">
-  <title>نبرد واحدها 3.4 | نسخه مهندسی اصلاح‌شده ⚔️</title>
+  <title>نبرد واحدها 3.5 | نسخه نهایی اصلاح‌شده ⚔️</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -359,7 +359,7 @@
 
     <div id="dynamicContent">
       <div id="startScreen" style="text-align:center; padding:20px;">
-        <h2 style="color:#e7c568;">⚔️ نبرد واحدها 3.4 ⚔️</h2>
+        <h2 style="color:#e7c568;">⚔️ نبرد واحدها 3.5 ⚔️</h2>
         <p style="margin:15px 0;">📏 طول | 📐 مساحت | 🧊 حجم | 💧 مایعات | 🏋️ جرم</p>
         <p style="color:#ccb27c; font-size:0.85rem;">🔬 نسخه مهندسی اصلاح‌شده - تمام edge-caseها پوشش داده شده</p>
         <div style="margin:10px 0;">
@@ -488,6 +488,9 @@
       const EPSILON = 1e-6;  // 🟡 مورد ۴: دقت یکسان در سراسر برنامه
       const DISPLAY_PRECISION = 4;  // تعداد ارقام اعشار برای نمایش
 
+      // 🟢 Feature: Tutorial flag
+      const HAS_SEEN_TUTORIAL_KEY = 'unitWar_hasSeenTutorial_v35';
+
       // ==================== معماری علمی واحدها ====================
       const unitDefinitions = {
         'میلی متر':    { base: 'mm', dimension: 1, scale: 0,  icon: '📏', cat: 'length' },
@@ -602,6 +605,15 @@
         return { min: 3, max: 12, ideal: 7 };
       }
 
+      // ==================== 🔢 Feature: Clamp اعداد به محدوده آموزشی ====================
+      function clampEducationalNumber(n) {
+        if (!isFinite(n) || isNaN(n)) return 0;
+        const abs = Math.abs(n);
+        if (abs < 0.01) return 0.01;
+        if (abs > 100000) return Math.sign(n) * 100000;
+        return n;
+      }
+
       // ==================== تولید سوال بدون recursion ====================
       function generateQuestion() {
         const MAX_ATTEMPTS = 15;
@@ -695,8 +707,8 @@
 
         // Fallback امن
         const fallbackUnits = categories['length'].units;
-        const fFrom = fallbackUnits[0]; // میلی متر
-        const fTo = fallbackUnits.find(u => u !== fFrom) || fallbackUnits[3]; // متر
+        const fFrom = fallbackUnits[0];
+        const fTo = fallbackUnits.find(u => u !== fFrom) || fallbackUnits[3];
         const fValue = 1000;
         return {
           value: fValue,
@@ -712,7 +724,7 @@
         };
       }
 
-      // ==================== تولید گزینه‌های کاملاً امن با clamp ====================
+      // ==================== تولید گزینه‌های کاملاً امن با clamp و محدوده آموزشی ====================
       function generateOptions(question) {
         const correct = question.correctAnswer;
         if (!isFinite(correct) || isNaN(correct)) {
@@ -722,15 +734,13 @@
         const options = new Set();
         options.add(parseFloat(correct.toFixed(DISPLAY_PRECISION)));
 
-        const ABSOLUTE_MIN_DIFF = correct === 0 ? 0.01 : Math.max(0.01, Math.abs(correct) * 0.05);
-
         const strategies = [
-          () => correct === 0 ? 1 : correct * (0.5 + Math.random() * 0.3),
-          () => correct === 0 ? 10 : correct * (1.2 + Math.random() * 0.5),
-          () => correct === 0 ? 5 : correct + (Math.random() - 0.5) * Math.abs(correct) * 0.4,
-          () => correct === 0 ? 100 : correct * Math.pow(10, Math.floor(Math.random() * 3) - 1),
-          () => correct === 0 ? 0.5 : correct * (0.1 + Math.random() * 0.3),
-          () => correct === 0 ? 50 : correct * (1.5 + Math.random() * 1.5),
+          () => correct * (0.7 + Math.random() * 0.6),  // ✅ جایگزین multipliers ناایمن
+          () => correct * (1.2 + Math.random() * 0.5),
+          () => correct + (Math.random() - 0.5) * Math.abs(correct) * 0.4,
+          () => correct * Math.pow(10, Math.floor(Math.random() * 2) - 1), // محدود به ضریب 0.1 یا 10
+          () => correct * (0.1 + Math.random() * 0.3),
+          () => correct * (1.5 + Math.random() * 1.5),
         ];
 
         const MAX_STRATEGY_ATTEMPTS = 30;
@@ -740,7 +750,9 @@
           
           // 🟠 مورد ۳: Clamp برای جلوگیری از overflow/underflow
           fake = Math.min(1e9, Math.max(0.0001, fake));
-          fake = parseFloat(fake.toFixed(DISPLAY_PRECISION));
+          // ✅ Feature: Clamp آموزشی + گرد کردن
+          fake = clampEducationalNumber(fake);
+          fake = parseFloat(fake.toFixed(2)); // گرد کردن به ۲ رقم اعشار برای خوانایی
           
           if (!isFinite(fake) || isNaN(fake) || fake <= 0) continue;
           if (options.has(fake)) continue;
@@ -758,7 +770,8 @@
             : [correct * 0.5, correct * 2, correct * 0.1, correct * 10, correct * 0.75, correct * 1.5];
           for (const fb of fallbacks) {
             if (options.size >= 4) break;
-            const val = parseFloat(fb.toFixed(DISPLAY_PRECISION));
+            let val = clampEducationalNumber(fb);
+            val = parseFloat(val.toFixed(2));
             if (!isFinite(val) || val <= 0 || options.has(val)) continue;
             if (Math.abs(val - correct) > EPSILON) {
               options.add(val);
@@ -822,16 +835,15 @@
       // ==================== بارگذاری امن داده‌ها ====================
       function loadSavedData() {
         try {
-          highScore = parseInt(localStorage.getItem('unitWarHighScore_v34')) || 0;
+          highScore = parseInt(localStorage.getItem('unitWarHighScore_v35')) || 0;
           if (!isFinite(highScore)) highScore = 0;
         } catch (e) {
-          // 🟡 مورد ۷: لاگ کردن خطا برای debugging
           console.warn('Failed to load high score:', e);
           highScore = 0;
         }
 
         try {
-          const raw = localStorage.getItem('unitWarMedals_v34');
+          const raw = localStorage.getItem('unitWarMedals_v35');
           allMedals = raw ? JSON.parse(raw) : [];
           if (!Array.isArray(allMedals)) {
             console.warn('Corrupted medals data, resetting');
@@ -845,8 +857,8 @@
 
       function saveData() {
         try {
-          localStorage.setItem('unitWarHighScore_v34', highScore.toString());
-          localStorage.setItem('unitWarMedals_v34', JSON.stringify(allMedals));
+          localStorage.setItem('unitWarHighScore_v35', highScore.toString());
+          localStorage.setItem('unitWarMedals_v35', JSON.stringify(allMedals));
         } catch (e) {
           console.warn('Failed to save data:', e);
         }
@@ -855,15 +867,33 @@
       if (highScoreDisplay) highScoreDisplay.textContent = highScore;
       if (totalMedalsDisplay) totalMedalsDisplay.textContent = allMedals.length;
 
+      // ==================== 🟢 Feature: Tutorial نمایش راهنما فقط بار اول ====================
+      function showTutorial() {
+        alert(
+          `🎮 راهنمای بازی:
+
+⚔️ حمله = ثبت پاسخ شما
+💡 گزینه‌ها = انتخاب سریع جواب
+⏰ پاورآپ‌ها = کمک در بازی
+🔥 هدف = رسیدن به بالاترین امتیاز
+
+برای شروع OK را بزن`
+        );
+        try {
+          localStorage.setItem(HAS_SEEN_TUTORIAL_KEY, '1');
+        } catch (e) {
+          console.warn('Could not save tutorial flag', e);
+        }
+      }
+
       // ==================== Event Listeners با Event Delegation ====================
-      // 🟡 مورد ۵: استفاده از event delegation به جای listenerهای مجزا
       document.getElementById('startGameBtn')?.addEventListener('click', startGame);
       document.getElementById('restartFromPlay')?.addEventListener('click', restartGame);
       document.getElementById('playAgainEnd')?.addEventListener('click', restartGame);
       document.getElementById('submitAnswer')?.addEventListener('click', handleSubmit);
       document.getElementById('closeMedalModal')?.addEventListener('click', () => medalModal.classList.remove('active'));
 
-      // Event delegation برای powerup bar
+      // Event delegation برای powerup bar (🟡 مورد ۵: حل مشکل listener duplication احتمالی)
       powerupBar?.addEventListener('click', (e) => {
         const powerupIcon = e.target.closest('.powerup-icon[data-powerup]');
         if (powerupIcon) {
@@ -1062,7 +1092,6 @@
             freezeEndTime = Date.now() + 5000;
             break;
           case 'hint': {
-            // ریست selectedOptionBtn هنگام hint
             selectedOptionBtn = null;
             const allBtns = optionsContainer.querySelectorAll('.option-btn:not(.disabled-option):not(.selected-option)');
             const correct = currentQuestion.correctAnswer;
@@ -1095,7 +1124,6 @@
         const el = document.createElement('div');
         el.className = 'combo-effect';
         el.textContent = text;
-        // استفاده از animationend به جای setTimeout برای جلوگیری از memory leak
         el.addEventListener('animationend', () => {
           if (el.parentNode) el.remove();
         }, { once: true });
@@ -1170,6 +1198,15 @@
       }
 
       function startGame() {
+        // 🟢 Feature: Tutorial فقط بار اول
+        try {
+          if (!localStorage.getItem(HAS_SEEN_TUTORIAL_KEY)) {
+            showTutorial();
+          }
+        } catch (e) {
+          console.warn('Tutorial check failed', e);
+        }
+
         resetGameState();
         initAudio();
         gameActive = true;
@@ -1225,7 +1262,6 @@
         startGame();
       }
 
-      // Cleanup function برای memory management
       function cleanup() {
         resetTimer();
         gameActive = false;
